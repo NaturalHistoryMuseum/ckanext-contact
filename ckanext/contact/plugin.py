@@ -19,14 +19,14 @@ class ContactPlugin(p.SingletonPlugin):
     ## IConfigurer
     def update_config(self, config):
         p.toolkit.add_template_directory(config, 'theme/templates')
-        p.toolkit.add_public_directory(config, 'theme/public')
+        # p.toolkit.add_public_directory(config, 'theme/public')
         # p.toolkit.add_resource('theme/public', 'ckanext-nhm')
 
     ## IRoutes
     def before_map(self, map):
 
         # Add controller for KE EMu specimen records
-        map.connect('contact', '/contact',
+        map.connect('contact_form', '/contact',
                     controller='ckanext.contact.controllers.contact:ContactController',
                     action='form')
 
