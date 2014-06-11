@@ -19,8 +19,8 @@ class ContactPlugin(p.SingletonPlugin):
     ## IConfigurer
     def update_config(self, config):
         p.toolkit.add_template_directory(config, 'theme/templates')
-        # p.toolkit.add_public_directory(config, 'theme/public')
-        # p.toolkit.add_resource('theme/public', 'ckanext-nhm')
+        p.toolkit.add_public_directory(config, 'theme/public')
+        p.toolkit.add_resource('theme/public', 'ckanext-contact')
 
     ## IRoutes
     def before_map(self, map):
@@ -29,6 +29,11 @@ class ContactPlugin(p.SingletonPlugin):
         map.connect('contact_form', '/contact',
                     controller='ckanext.contact.controllers.contact:ContactController',
                     action='form')
+
+        # Add AJAX request handler
+        map.connect('contact_ajax_submit', '/contact/ajax',
+                    controller='ckanext.contact.controllers.contact:ContactController',
+                    action='ajax_submit')
 
         return map
 
