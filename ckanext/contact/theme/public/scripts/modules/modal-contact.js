@@ -53,12 +53,17 @@ this.ckan.module('modal-contact', function (jQuery, _) {
                 type: this.method,
                 data: form.serialize(),
                 success: function (results) {
-                    if (jQuery.isEmptyObject(results.errors)){
-                        module.hide()
-                    }else{
-                        module.processError(form, results.errors)
-                    }
 
+                    if (results.data['success'] !== undefined){
+                        module.hide();
+                        module.flash_success('Thank you for your request - we will answer you as soon as possible.');
+                    } else if (!jQuery.isEmptyObject(results.errors)){
+                        module.processFormError(form, results.errors)
+                    }else{
+                        // If not success and there's no user input errors, the email submission has failed
+                        module.hide();
+                        module.flash_error('Sorry, there was an error sending the email. Please try again later.');
+                    }
                 }
               });
 
@@ -70,10 +75,10 @@ this.ckan.module('modal-contact', function (jQuery, _) {
 
     },
 
-    /* Hides the modal.
+    /* Process errors returned from form submission process
      *
      */
-    processError: function (form, errors) {
+    processFormError: function (form, errors) {
         // Remove all errors & classes
         form.find('.error-block').remove();
         form.find('.error').removeClass('error');
@@ -93,6 +98,18 @@ this.ckan.module('modal-contact', function (jQuery, _) {
       if (this.modal) {
         this.modal.modal('hide');
       }
+    },
+
+    flash_error: function (message) {
+        this.flash(message, 'alert-error')
+    },
+
+    flash_success: function (message) {
+        this.flash(message, 'alert-success')
+    },
+
+    flash: function (message, category) {
+        $('.flash-messages').append('<div class="alert ' + category + '">' + message + '</div>');
     },
 
     loadForm: function () {

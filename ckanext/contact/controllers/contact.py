@@ -39,7 +39,8 @@ class ContactController(base.BaseController):
         except logic.NotAuthorized:
             base.abort(401, _('Not authorized to use contact form'))
 
-    def _submit(self, context):
+    @staticmethod
+    def _submit(context):
 
         try:
             data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
@@ -68,6 +69,7 @@ class ContactController(base.BaseController):
             error_summary['content'] = u'Missing value'
 
         if len(errors) == 0:
+            # TODO - Proper settings
             mail_to = config.get('email_to')
             recipient_name = config.get('ckan.site_title')
             subject = 'CKAN - Contact/Question from visitor'
