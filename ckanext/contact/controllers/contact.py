@@ -114,8 +114,11 @@ class ContactController(base.BaseController):
             data, errors, error_summary = self._submit(self.context)
         else:
             # Try and use logged in user values for default values
-            data['name'] = base.c.userobj.fullname or base.c.userobj.name
-            data['email'] = base.c.userobj.email
+            try:
+                data['name'] = base.c.userobj.fullname or base.c.userobj.name
+                data['email'] = base.c.userobj.email
+            except AttributeError:
+                data['name'] = data['email'] = None
 
         if data.get('success', False):
             return p.toolkit.render('contact/success.html')
