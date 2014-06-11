@@ -20,6 +20,9 @@ redirect = base.redirect
 DataError = dictization_functions.DataError
 unflatten = dictization_functions.unflatten
 
+check_access = logic.check_access
+get_action = logic.get_action
+
 class ContactController(base.BaseController):
     """
     Controller for displaying a contact form
@@ -31,7 +34,7 @@ class ContactController(base.BaseController):
 
         try:
             self.context = {'model': model, 'session': model.Session, 'user': base.c.user or base.c.author, 'auth_user_obj': base.c.userobj}
-            logic.check_access('site_read', self.context)
+            check_access('site_read', self.context)
         except logic.NotAuthorized:
             base.abort(401, _('Not authorized to use contact form'))
 
@@ -93,6 +96,11 @@ class ContactController(base.BaseController):
         # Submit the data
         if 'save' in request.params:
             data, errors, error_summary = self._submit(self.context)
+        else:
+            # Try and use logged in user values for default values
+            data['name'] = base.c.userobj.fullname or base.c.userobj.name
+            data['email'] = base.c.userobj.email
+
         if data.get('success', False):
             return p.toolkit.render('contact/success.html')
         else:
