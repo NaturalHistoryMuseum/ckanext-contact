@@ -69,10 +69,10 @@ class ContactController(base.BaseController):
             error_summary['content'] = u'Missing value'
 
         if len(errors) == 0:
-            # TODO - Proper settings
-            mail_to = config.get('email_to')
-            recipient_name = config.get('ckan.site_title')
-            subject = 'CKAN - Contact/Question from visitor'
+
+            mail_to = config.get("ckanext.contact.email_to", config.get('email_to'))
+            recipient_name = config.get("ckanext.contact.recipient_name", config.get('ckan.site_title'))
+            subject = config.get("ckanext.contact.subject", 'Contact/Question from visitor')
             body = 'Submitted by %s (%s)\n' % (data_dict["name"], data_dict["email"])
             body += 'Request: %s' % data_dict["content"]
 
@@ -92,7 +92,6 @@ class ContactController(base.BaseController):
         """
 
         # TODO: Passing in dataset & request params
-        # TODO: Letting user know message was sent
 
         data, errors, error_summary = self._submit(self.context)
         data = flatten_to_string_key({'data': data, 'errors': errors, 'error_summary': error_summary})
