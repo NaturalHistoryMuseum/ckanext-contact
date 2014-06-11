@@ -65,7 +65,7 @@ class ContactController(base.BaseController):
 
         if len(errors) == 0:
             mail_to = config.get('email_to')
-            recipient_name = 'CKAN Surrey'
+            recipient_name = config.get('ckan.site_title')
             subject = 'CKAN - Contact/Question from visitor'
             body = 'Submitted by %s (%s)\n' % (data_dict["name"], data_dict["email"])
             body += 'Request: %s' % data_dict["content"]
