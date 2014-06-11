@@ -2,4 +2,8 @@
 
 This extension adds a contact form
 
-**Current Status:** Beta
+**Current Status:** ALPHA: Under active development
+
+**Credits:**
+
+Based on code from City Of Surrey: https://github.com/CityofSurrey/ckanext-surrey
