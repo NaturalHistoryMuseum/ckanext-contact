@@ -9,7 +9,7 @@ import ckan.lib.mailer as mailer
 import ckan.lib.helpers as h
 import socket
 from pylons import config
-from ckan.common import _, request, c
+from ckan.common import _, request, c, response
 
 log = logging.getLogger(__name__)
 
@@ -22,6 +22,7 @@ unflatten = dictization_functions.unflatten
 
 check_access = logic.check_access
 get_action = logic.get_action
+flatten_to_string_key = logic.flatten_to_string_key
 
 class ContactController(base.BaseController):
     """
@@ -82,6 +83,20 @@ class ContactController(base.BaseController):
                 
         return data_dict, errors, error_summary
 
+    def ajax_submit(self):
+        """
+        AJAX form submission
+        @return:
+        """
+
+        # TODO: Passing in dataset & request params
+        # TODO: Letting user know message was sent
+
+        data, errors, error_summary = self._submit(self.context)
+        data = flatten_to_string_key({'data': data, 'errors': errors, 'error_summary': error_summary})
+        response.headers['Content-Type'] = 'application/json;charset=utf-8'
+        return h.json.dumps(data)
+
     def form(self):
 
         """
@@ -105,4 +120,4 @@ class ContactController(base.BaseController):
             return p.toolkit.render('contact/success.html')
         else:
             vars = {'data': data, 'errors': errors, 'error_summary': error_summary}
-            return p.toolkit.render('contact/form.html', extra_vars=vars)
+            return p.toolkit.render('contact/page.html', extra_vars=vars)
