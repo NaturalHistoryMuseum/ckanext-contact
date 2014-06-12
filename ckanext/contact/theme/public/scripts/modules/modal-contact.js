@@ -12,8 +12,13 @@ this.ckan.module('modal-contact', function (jQuery, _) {
     modal: null,
 
     options: {
-      imageUrl: null,
-      form: '/api/1/util/snippet/contact_form.html'
+      template: '/api/1/util/snippet/contact_form.html',
+      i18n: {
+        noTemplate: _('Sorry, we could not load the contact form. Please try again later.'),
+        loadError: _('Sorry, we could not load the contact form. Please try again later.'),
+        onSuccess: _('Thank you for your request - we will answer you as soon as possible.'),
+        onError: _('Sorry, there was an error sending the email. Please try again later.')
+      }
     },
 
     /* Sets up event listeners
@@ -39,7 +44,7 @@ this.ckan.module('modal-contact', function (jQuery, _) {
       var sandbox = this.sandbox,
           module = this;
 
-      this.loadForm().done(function (html) {
+      this.loadTemplate().done(function (html) {
 
         module.modal = jQuery(html);
         module.modal.find('.modal-header :header').append('<button class="close" data-dismiss="modal">×</button>');
@@ -56,16 +61,18 @@ this.ckan.module('modal-contact', function (jQuery, _) {
 
                     if (results.data['success'] !== undefined){
                         module.hide();
-                        module.flash_success('Thank you for your request - we will answer you as soon as possible.');
+                        module.flash_success(this.i18n('onSuccess'));
                     } else if (!jQuery.isEmptyObject(results.errors)){
                         module.processFormError(form, results.errors)
                     }else{
                         // If not success and there's no user input errors, the email submission has failed
                         module.hide();
-                        module.flash_error('Sorry, there was an error sending the email. Please try again later.');
+                        module.flash_error(this.i18n('onError'));
                     }
                 }
               });
+
+            // TODO: Add cancel button
 
         });
 
@@ -112,13 +119,19 @@ this.ckan.module('modal-contact', function (jQuery, _) {
         $('.flash-messages').append('<div class="alert ' + category + '">' + message + '</div>');
     },
 
-    loadForm: function () {
+    loadTemplate: function () {
+
+      if (!this.options.template) {
+        this.sandbox.notify(this.i18n('noTemplate'));
+        return jQuery.Deferred().reject().promise();
+      }
+
       if (!this.promise) {
         this.loading();
 
         // This should use sandbox.client!
-        this.promise = jQuery.get(this.options.form);
-        this.promise.then(this._onFormSuccess, this._onFormError);
+        this.promise = jQuery.get(this.options.template);
+        this.promise.then(this._onTemplateSuccess, this._onTemplateError);
       }
       return this.promise;
     },
@@ -130,12 +143,12 @@ this.ckan.module('modal-contact', function (jQuery, _) {
     },
 
     /* Success handler for when the template is loaded */
-    _onFormSuccess: function () {
+    _onTemplateSuccess: function () {
       this.loading(false);
     },
 
     /* error handler when the template fails to load */
-    _onFormError: function () {
+    _onTemplateError: function () {
       this.loading(false);
       this.sandbox.notify(this.i18n('loadError'));
     }
