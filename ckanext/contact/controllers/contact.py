@@ -90,9 +90,6 @@ class ContactController(base.BaseController):
         AJAX form submission
         @return:
         """
-
-        # TODO: Passing in dataset & request params
-
         data, errors, error_summary = self._submit(self.context)
         data = flatten_to_string_key({'data': data, 'errors': errors, 'error_summary': error_summary})
         response.headers['Content-Type'] = 'application/json;charset=utf-8'
