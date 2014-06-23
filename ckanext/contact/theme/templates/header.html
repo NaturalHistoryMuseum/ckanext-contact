@@ -3,8 +3,11 @@
 {% block contact_link %}
     <li>
       <a href="{{ h.url_for('contact_form') }}" title="{{ _('Contact') }}">
-        <i class="icon-envelope"></i>
-        {{ _('Contact') }}
+        {% if c.userobj %}
+          <i class="icon-envelope"></i>
+        {% else %}
+           {{ _('Contact') }}
+        {% endif %}
       </a>
     </li>
 {% endblock %}
