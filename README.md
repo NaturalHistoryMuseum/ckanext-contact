@@ -6,9 +6,9 @@ This extension adds a contact form
 
 **Settings**
 
-ckanext.context.mail_to =
-ckanext.issues.recipient_name =
-ckanext.issues.subject =
+ckanext.contact.mail_to =
+ckanext.contact.recipient_name =
+ckanext.contact.subject =
 
 **Credits:**
 
