@@ -70,7 +70,8 @@ class ContactController(base.BaseController):
 
         if len(errors) == 0:
 
-            mail_to = config.get("ckanext.contact.email_to", config.get('email_to'))
+            mail_to = config.get("ckanext.contact.mail_to", config.get('mail_to'))
+
             recipient_name = config.get("ckanext.contact.recipient_name", config.get('ckan.site_title'))
             subject = config.get("ckanext.contact.subject", 'Contact/Question from visitor')
             body = 'Submitted by %s (%s)\n' % (data_dict["name"], data_dict["email"])
