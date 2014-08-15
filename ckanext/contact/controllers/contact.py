@@ -121,4 +121,4 @@ class ContactController(base.BaseController):
             return p.toolkit.render('contact/success.html')
         else:
             vars = {'data': data, 'errors': errors, 'error_summary': error_summary}
-            return p.toolkit.render('contact/page.html', extra_vars=vars)
+            return p.toolkit.render('contact/form.html', extra_vars=vars)
