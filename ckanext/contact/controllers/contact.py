@@ -10,6 +10,7 @@ import ckan.lib.helpers as h
 import socket
 from pylons import config
 from ckan.common import _, request, c, response
+from ckanext.contact.interfaces import IContact
 
 log = logging.getLogger(__name__)
 
@@ -70,19 +71,28 @@ class ContactController(base.BaseController):
 
         if len(errors) == 0:
 
-            mail_to = config.get('email_to')
-            recipient_name = config.get("ckanext.contact.recipient_name", config.get('ckan.site_title'))
-            subject = config.get("ckanext.contact.subject", 'Contact/Question from visitor')
             body = 'Submitted by %s (%s)\n' % (data_dict["name"], data_dict["email"])
             body += 'Request: %s' % data_dict["content"]
-            headers = {'reply-to': data_dict["email"]}
 
-            try:
-                mailer.mail_recipient(recipient_name, mail_to, subject, body, headers)
-            except (mailer.MailerException, socket.error):
-                h.flash_error(_(u'Sorry, there was an error sending the email. Please try again later'))
-            else:
-                data_dict['success'] = True
+            mail_dict = {
+                'mail_to': config.get('email_to'),
+                'recipient_name': config.get("ckanext.contact.recipient_name", config.get('ckan.site_title')),
+                'subject': config.get("ckanext.contact.subject", 'Contact/Question from visitor'),
+                'body': body,
+                'headers': {'reply-to': data_dict["email"]}
+            }
+
+            # Allow other plugins to modify the mail_dict
+            for plugin in p.PluginImplementations(IContact):
+                plugin.mail_alter(mail_dict, data_dict)
+
+            #
+            # try:
+            #     mailer.mail_recipient(**mail_dict)
+            # except (mailer.MailerException, socket.error):
+            #     h.flash_error(_(u'Sorry, there was an error sending the email. Please try again later'))
+            # else:
+            #     data_dict['success'] = True
                 
         return data_dict, errors, error_summary
 
