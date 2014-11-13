@@ -71,11 +71,11 @@ class ContactController(base.BaseController):
 
         if len(errors) == 0:
 
-            body = 'Submitted by %s (%s)\n' % (data_dict["name"], data_dict["email"])
-            body += 'Request: %s' % data_dict["content"]
+            body = '%s' % data_dict["content"]
+            body += '\n\nSent by:\nName:%s\nEmail: %s\n' % (data_dict["name"], data_dict["email"])
 
             mail_dict = {
-                'mail_to': config.get('email_to'),
+                'recipient_email': config.get('email_to'),
                 'recipient_name': config.get("ckanext.contact.recipient_name", config.get('ckan.site_title')),
                 'subject': config.get("ckanext.contact.subject", 'Contact/Question from visitor'),
                 'body': body,
@@ -86,13 +86,12 @@ class ContactController(base.BaseController):
             for plugin in p.PluginImplementations(IContact):
                 plugin.mail_alter(mail_dict, data_dict)
 
-            #
-            # try:
-            #     mailer.mail_recipient(**mail_dict)
-            # except (mailer.MailerException, socket.error):
-            #     h.flash_error(_(u'Sorry, there was an error sending the email. Please try again later'))
-            # else:
-            #     data_dict['success'] = True
+            try:
+                mailer.mail_recipient(**mail_dict)
+            except (mailer.MailerException, socket.error):
+                h.flash_error(_(u'Sorry, there was an error sending the email. Please try again later'))
+            else:
+                data_dict['success'] = True
                 
         return data_dict, errors, error_summary
 
