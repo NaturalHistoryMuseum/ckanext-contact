@@ -6,6 +6,7 @@
  *
  */
 this.ckan.module('modal-contact', function (jQuery, _) {
+  var self
   return {
 
     /* holds the loaded lightbox */
@@ -16,7 +17,7 @@ this.ckan.module('modal-contact', function (jQuery, _) {
       i18n: {
         noTemplate: _('Sorry, we could not load the contact form. Please try again later.'),
         loadError: _('Sorry, we could not load the contact form. Please try again later.'),
-        onSuccess: _('Thank you for your request - we will answer you as soon as possible.'),
+        onSuccess: _('Thank you for contacting us - we will be in touch as soon as possible.'),
         onError: _('Sorry, there was an error sending the email. Please try again later.')
       }
     },
@@ -26,6 +27,7 @@ this.ckan.module('modal-contact', function (jQuery, _) {
      * Returns nothing.
      */
     initialize: function () {
+      self = this;
       jQuery.proxyAll(this, /_on/);
       this.el.on('click', this._onClick);
     },
@@ -58,16 +60,15 @@ this.ckan.module('modal-contact', function (jQuery, _) {
                 type: this.method,
                 data: form.serialize(),
                 success: function (results) {
-
                     if (results.data['success'] !== undefined){
                         module.hide();
-                        module.flash_success(this.i18n('onSuccess'));
+                        self.flash_success(self.i18n('onSuccess'))
                     } else if (!jQuery.isEmptyObject(results.errors)){
-                        module.processFormError(form, results.errors)
+                        self.processFormError(form, results.errors)
                     }else{
                         // If not success and there's no user input errors, the email submission has failed
                         module.hide();
-                        module.flash_error(this.i18n('onError'));
+                        self.flash_error(self.i18n('onError'));
                     }
                 }
               });
