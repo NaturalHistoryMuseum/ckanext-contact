@@ -17,7 +17,7 @@ this.ckan.module('modal-contact', function (jQuery, _) {
       i18n: {
         noTemplate: _('Sorry, we could not load the contact form. Please try again later.'),
         loadError: _('Sorry, we could not load the contact form. Please try again later.'),
-        onSuccess: _('Thank you for contacting us - we will be in touch as soon as possible.'),
+        onSuccess: _('Thank you for contacting us, and we will try and reply as soon as possible.<br />Unfortunately due to the number of enquiries the Museum receives, we cannot always reply in person to every one.'),
         onError: _('Sorry, there was an error sending the email. Please try again later.')
       }
     },
