@@ -2,7 +2,7 @@
 
 This extension adds a contact form
 
-**Current Status:** ALPHA: Under active development
+**DEMO:** http://data.nhm.ac.uk/
 
 **Settings**
 
