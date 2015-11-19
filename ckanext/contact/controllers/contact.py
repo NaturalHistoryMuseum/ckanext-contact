@@ -73,9 +73,8 @@ class ContactController(base.BaseController):
 
             body = '%s' % data_dict["content"]
             body += '\n\nSent by:\nName:%s\nEmail: %s\n' % (data_dict["name"], data_dict["email"])
-
             mail_dict = {
-                'recipient_email': config.get('email_to'),
+                'recipient_email': config.get("ckanext.contact.mail_to", config.get('email_to')),
                 'recipient_name': config.get("ckanext.contact.recipient_name", config.get('ckan.site_title')),
                 'subject': config.get("ckanext.contact.subject", 'Contact/Question from visitor'),
                 'body': body,
