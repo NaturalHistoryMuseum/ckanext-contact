@@ -6,9 +6,9 @@ This extension adds a contact form
 
 **Settings**
 
-ckanext.contact.mail_to =
-ckanext.contact.recipient_name =
-ckanext.contact.subject =
+     ckanext.contact.mail_to =
+     ckanext.contact.recipient_name =
+     ckanext.contact.subject =
 
 **Credits:**
 
