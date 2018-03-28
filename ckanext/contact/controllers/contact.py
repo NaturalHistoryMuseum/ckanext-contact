@@ -1,133 +1,146 @@
+#!/usr/bin/env python
+# encoding: utf-8
+#
+# This file is part of ckanext-contact
+# Created by the Natural History Museum in London, UK
+
 import logging
-import ckan.lib.base as base
-import ckan.plugins as p
-import ckan.logic as logic
-import ckan.model as model
-import ckan.lib.captcha as captcha
-import ckan.lib.navl.dictization_functions as dictization_functions
-import ckan.lib.mailer as mailer
-import ckan.lib.helpers as h
 import socket
-from pylons import config
-from ckan.common import _, request, c, response
+
 from ckanext.contact.interfaces import IContact
+
+from ckan import logic
+from ckan.lib import captcha, mailer
+from ckan.plugins import PluginImplementations, toolkit
 
 log = logging.getLogger(__name__)
 
-render = base.render
-abort = base.abort
-redirect = base.redirect
 
-DataError = dictization_functions.DataError
-unflatten = dictization_functions.unflatten
-
-check_access = logic.check_access
-get_action = logic.get_action
-flatten_to_string_key = logic.flatten_to_string_key
-
-class ContactController(base.BaseController):
-    """
-    Controller for displaying a contact form
-    """
+class ContactController(toolkit.BaseController):
+    '''Controller for displaying a contact form'''
 
     def __before__(self, action, **env):
 
         super(ContactController, self).__before__(action, **env)
 
         try:
-            self.context = {'model': model, 'session': model.Session, 'user': base.c.user or base.c.author, 'auth_user_obj': base.c.userobj}
-            check_access('send_contact', self.context)
-        except logic.NotAuthorized:
-            base.abort(401, _('Not authorized to use contact form'))
+            self.context = {
+                u'user': toolkit.c.user or toolkit.c.author,
+                }
+            toolkit.check_access(u'send_contact', self.context)
+        except toolkit.NotAuthorized:
+            toolkit.abort(401, toolkit._(u'Not authorized to use contact form'))
 
     @staticmethod
     def _submit(context):
+        '''
+
+        :param context: 
+
+        '''
 
         try:
-            data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-            context['message'] = data_dict.get('log_message', '')
-            c.form = data_dict['name']
-            captcha.check_recaptcha(request)
+            data_dict = logic.clean_dict(
+                toolkit.dictization_functions.unflatten(
+                    logic.tuplize_dict(logic.parse_params(toolkit.request.params))))
+            context[u'message'] = data_dict.get(u'log_message', u'')
+            toolkit.c.form = data_dict[u'name']
+            captcha.check_recaptcha(toolkit.request)
         except logic.NotAuthorized:
-            base.abort(401, _('Not authorized to see this page'))
+            toolkit.abort(401, toolkit._(u'Not authorized to see this page'))
         except captcha.CaptchaError:
-            error_msg = _(u'Bad Captcha. Please try again.')
-            h.flash_error(error_msg)
+            error_msg = toolkit._(u'Bad Captcha. Please try again.')
+            toolkit.h.flash_error(error_msg)
 
         errors = {}
         error_summary = {}
 
-        if data_dict["email"] == '':
-            errors['email'] = [u'Missing Value']
-            error_summary['email'] = u'Missing value'
+        if data_dict[u'email'] == u'':
+            errors[u'email'] = [u'Missing Value']
+            error_summary[u'email'] = u'Missing value'
 
-        if data_dict["name"] == '':
-            errors['name'] = [u'Missing Value']
-            error_summary['name'] = u'Missing value'
+        if data_dict[u'name'] == u'':
+            errors[u'name'] = [u'Missing Value']
+            error_summary[u'name'] = u'Missing value'
 
-        if data_dict["content"] == '':
-            errors['content'] = [u'Missing Value']
-            error_summary['content'] = u'Missing value'
+        if data_dict[u'content'] == u'':
+            errors[u'content'] = [u'Missing Value']
+            error_summary[u'content'] = u'Missing value'
 
         if len(errors) == 0:
 
-            body = '%s' % data_dict["content"]
-            body += '\n\nSent by:\nName:%s\nEmail: %s\n' % (data_dict["name"], data_dict["email"])
+            body = u'%s' % data_dict[u'content']
+            body += u'\n\nSent by:\nName:%s\nEmail: %s\n' % (
+                data_dict[u'name'], data_dict[u'email'])
             mail_dict = {
-                'recipient_email': config.get("ckanext.contact.mail_to", config.get('email_to')),
-                'recipient_name': config.get("ckanext.contact.recipient_name", config.get('ckan.site_title')),
-                'subject': config.get("ckanext.contact.subject", 'Contact/Question from visitor'),
-                'body': body,
-                'headers': {'reply-to': data_dict["email"]}
-            }
+                u'recipient_email': toolkit.config.get(u'ckanext.contact.mail_to',
+                                                       toolkit.config.get(u'email_to')),
+                u'recipient_name': toolkit.config.get(u'ckanext.contact.recipient_name',
+                                                      toolkit.config.get(
+                                                          u'ckan.site_title')),
+                u'subject': toolkit.config.get(u'ckanext.contact.subject',
+                                               u'Contact/Question from visitor'),
+                u'body': body,
+                u'headers': {
+                    u'reply-to': data_dict[u'email']
+                    }
+                }
 
             # Allow other plugins to modify the mail_dict
-            for plugin in p.PluginImplementations(IContact):
+            for plugin in PluginImplementations(IContact):
                 plugin.mail_alter(mail_dict, data_dict)
 
             try:
                 mailer.mail_recipient(**mail_dict)
             except (mailer.MailerException, socket.error):
-                h.flash_error(_(u'Sorry, there was an error sending the email. Please try again later'))
+                toolkit.h.flash_error(toolkit._(
+                    u'Sorry, there was an error sending the email. Please try again later'))
             else:
-                data_dict['success'] = True
-                
+                data_dict[u'success'] = True
+
         return data_dict, errors, error_summary
 
     def ajax_submit(self):
-        """
-        AJAX form submission
-        @return:
-        """
+        '''AJAX form submission'''
         data, errors, error_summary = self._submit(self.context)
-        data = flatten_to_string_key({'data': data, 'errors': errors, 'error_summary': error_summary})
-        response.headers['Content-Type'] = 'application/json;charset=utf-8'
-        return h.json.dumps(data)
+        data = logic.flatten_to_string_key({
+            u'data': data,
+            u'errors': errors,
+            u'error_summary': error_summary
+            })
+        toolkit.response.headers[u'Content-Type'] = u'application/json;charset=utf-8'
+        return toolkit.h.json.dumps(data)
 
     def form(self):
 
-        """
-        Return a contact form
-        :return: html
-        """
+        '''
+
+
+        :returns: :return: html
+
+        '''
 
         data = {}
         errors = {}
         error_summary = {}
 
         # Submit the data
-        if 'save' in request.params:
+        if u'save' in toolkit.request.params:
             data, errors, error_summary = self._submit(self.context)
         else:
             # Try and use logged in user values for default values
             try:
-                data['name'] = base.c.userobj.fullname or base.c.userobj.name
-                data['email'] = base.c.userobj.email
+                data[u'name'] = toolkit.c.userobj.fullname or toolkit.c.userobj.name
+                data[u'email'] = toolkit.c.userobj.email
             except AttributeError:
-                data['name'] = data['email'] = None
+                data[u'name'] = data[u'email'] = None
 
-        if data.get('success', False):
-            return p.toolkit.render('contact/success.html')
+        if data.get(u'success', False):
+            return toolkit.render(u'contact/success.html')
         else:
-            vars = {'data': data, 'errors': errors, 'error_summary': error_summary}
-            return p.toolkit.render('contact/form.html', extra_vars=vars)
+            vars = {
+                u'data': data,
+                u'errors': errors,
+                u'error_summary': error_summary
+                }
+            return toolkit.render(u'contact/form.html', extra_vars=vars)
