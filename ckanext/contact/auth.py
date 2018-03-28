@@ -1,15 +1,13 @@
-
-#!/usr/bin/env python
+# !/usr/bin/env python
 # encoding: utf-8
 #
 # This file is part of ckanext-contact
 # Created by the Natural History Museum in London, UK
 
-import sys
-import os
-import ckan.plugins as p
+from ckan.plugins import toolkit
 
-@p.toolkit.auth_allow_anonymous_access
+
+@toolkit.auth_allow_anonymous_access
 def send_contact(context, data_dict):
     '''
 
@@ -18,6 +16,11 @@ def send_contact(context, data_dict):
 
     '''
     if True:
-        return {u'success': True}
+        return {
+            u'success': True
+        }
     else:
-        return {u'success': False, u'msg': u'Not allowed to use contact form'}
+        return {
+            u'success': False,
+            u'msg': u'Not allowed to use contact form'
+        }

@@ -4,11 +4,12 @@
 # This file is part of ckanext-contact
 # Created by the Natural History Museum in London, UK
 
-import ckan.plugins.interfaces as interfaces
+from ckan.plugins import interfaces
 
 
 class IContact(interfaces.Interface):
     '''Hook into contact form'''
+
     def mail_alter(self, mail_dict, data_dict):
         '''Allow altering of email values
         For example, allow directing contact form dependent on form values

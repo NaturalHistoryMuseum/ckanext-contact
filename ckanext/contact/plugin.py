@@ -4,18 +4,20 @@
 # This file is part of ckanext-contact
 # Created by the Natural History Museum in London, UK
 
-import os
 from logging import getLogger
-import ckan.plugins as p
+
 from ckanext.contact.auth import send_contact
+
+from ckan.plugins import SingletonPlugin, implements, interfaces, toolkit
 
 log = getLogger(__name__)
 
-class ContactPlugin(p.SingletonPlugin):
+
+class ContactPlugin(SingletonPlugin):
     '''CKAN Contact Extension'''
-    p.implements(p.IRoutes, inherit=True)
-    p.implements(p.IConfigurer)
-    p.implements(p.IAuthFunctions)
+    implements(interfaces.IRoutes, inherit=True)
+    implements(interfaces.IConfigurer)
+    implements(interfaces.IAuthFunctions)
 
     ## IConfigurer
     def update_config(self, config):
@@ -24,9 +26,9 @@ class ContactPlugin(p.SingletonPlugin):
         :param config: 
 
         '''
-        p.toolkit.add_template_directory(config, u'theme/templates')
-        p.toolkit.add_public_directory(config, u'theme/public')
-        p.toolkit.add_resource(u'theme/public', u'ckanext-contact')
+        toolkit.add_template_directory(config, u'theme/templates')
+        toolkit.add_public_directory(config, u'theme/public')
+        toolkit.add_resource(u'theme/public', u'ckanext-contact')
 
     ## IRoutes
     def before_map(self, map):
@@ -51,5 +53,6 @@ class ContactPlugin(p.SingletonPlugin):
     ## IAuthFunctions
     def get_auth_functions(self):
         ''' '''
-        return {u'send_contact': send_contact}
-
+        return {
+            u'send_contact': send_contact
+            }
