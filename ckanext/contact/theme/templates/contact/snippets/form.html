@@ -24,8 +24,10 @@
       </fieldset>
 
       <div class="form-actions">
-        {{ form.required_message() }}
-        <button class="btn btn-primary save" type="submit" name="save">{{ _('Submit') }}</button>
+        {% block contact_form_actions %}
+            {{ form.required_message() }}
+            <button class="btn btn-primary save" type="submit" name="save">{{ _('Submit') }}</button>
+        {% endblock %}
       </div>
     </form>
 
