@@ -1,15 +1,17 @@
 import logging
-import ckan.lib.base as base
-import ckan.plugins as p
-import ckan.logic as logic
-import ckan.model as model
-import ckan.lib.captcha as captcha
-import ckan.lib.navl.dictization_functions as dictization_functions
-import ckan.lib.mailer as mailer
-import ckan.lib.helpers as h
+
 import socket
 from pylons import config
-from ckan.common import _, request, c, response
+
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.lib.mailer as mailer
+import ckan.lib.navl.dictization_functions as dictization_functions
+import ckan.logic as logic
+import ckan.model as model
+import ckan.plugins as p
+from ckan.common import _, request, response
+from ckanext.contact import recaptcha
 from ckanext.contact.interfaces import IContact
 
 log = logging.getLogger(__name__)
@@ -35,28 +37,32 @@ class ContactController(base.BaseController):
         super(ContactController, self).__before__(action, **env)
 
         try:
-            self.context = {'model': model, 'session': model.Session,
-                            'user': base.c.user or base.c.author, 'auth_user_obj': base.c.userobj}
+            self.context = {
+                'model': model,
+                'session': model.Session,
+                'user': base.c.user or base.c.author,
+                'auth_user_obj': base.c.userobj
+            }
             check_access('send_contact', self.context)
         except logic.NotAuthorized:
             base.abort(401, _('Not authorized to use contact form'))
 
-    @staticmethod
-    def _submit(context):
-        try:
-            data_dict = logic.clean_dict(
-                unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-            context['message'] = data_dict.get('log_message', '')
-            c.form = data_dict['name']
-            captcha.check_recaptcha(request)
-        except logic.NotAuthorized:
-            base.abort(401, _('Not authorized to see this page'))
-        except captcha.CaptchaError:
-            error_msg = _(u'Bad Captcha. Please try again.')
-            h.flash_error(error_msg)
+        self.expected_action = config.get(u'ckanext.contact.recaptcha_v3_action')
 
+    def _submit(self):
         errors = {}
         error_summary = {}
+        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(
+            request.params))))
+
+        try:
+            recaptcha.check_recaptcha(data_dict.get(u'g-recaptcha-response', None),
+                                      self.expected_action)
+        except recaptcha.RecaptchaError as e:
+            log.info(u'Recaptcha failed due to "{}"'.format(e))
+            error_msg = _(u'Recaptcha failed, please try again.')
+            h.flash_error(error_msg)
+            return data_dict, errors, error_summary
 
         if data_dict["email"] == '':
             errors['email'] = [u'Missing Value']
@@ -101,7 +107,7 @@ class ContactController(base.BaseController):
         AJAX form submission
         @return:
         """
-        data, errors, error_summary = self._submit(self.context)
+        data, errors, error_summary = self._submit()
         data = flatten_to_string_key(
             {'data': data, 'errors': errors, 'error_summary': error_summary})
         response.headers['Content-Type'] = 'application/json;charset=utf-8'
@@ -117,8 +123,8 @@ class ContactController(base.BaseController):
         error_summary = {}
 
         # Submit the data
-        if 'save' in request.params:
-            data, errors, error_summary = self._submit(self.context)
+        if request.method == u'POST':
+            data, errors, error_summary = self._submit()
         else:
             # Try and use logged in user values for default values
             try:
@@ -133,6 +139,8 @@ class ContactController(base.BaseController):
             extra_vars = {
                 'data': data,
                 'errors': errors,
-                'error_summary': error_summary
+                'error_summary': error_summary,
+                'recaptcha_v3_key': config.get('ckanext.contact.recaptcha_v3_key'),
+                'recaptcha_v3_action': config.get('ckanext.contact.recaptcha_v3_action'),
             }
             return p.toolkit.render('contact/form.html', extra_vars=extra_vars)

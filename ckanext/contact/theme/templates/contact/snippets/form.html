@@ -1,38 +1,36 @@
 {% import 'macros/form.html' as form %}
+{% resource 'ckanext-contact/main' %}
 
 {% block contact_form %}
+    <form class="contact-form form-horizontal" method="post" data-module="recaptcha-contact"
+          data-module-action="{{ recaptcha_v3_action }}" data-module-key="{{ recaptcha_v3_key }}">
 
-<form class="contact-form form-horizontal" method="post">
-    {{ form.errors(error_summary) }}
+        {{ form.errors(error_summary) }}
 
-    <fieldset>
-        {% block contact_form_fields %}
-            {{ form.input('name', label=_('Contact Name'), id='field-name', value=data.name,
-                          error=errors.name, classes=['control-medium'], is_required=true) }}
+        <fieldset>
+            {% block contact_form_fields %}
+                {{ form.input('name', label=_('Contact Name'), id='field-name', value=data.name,
+                              error=errors.name, classes=['control-medium'], is_required=true) }}
 
-            {{ form.input('email', label=_('Email'), id='field-email', type='email',
-                          value=data.email, error=errors.email, classes=['control-medium'],
-                          is_required=true) }}
+                {{ form.input('email', label=_('Email'), id='field-email', type='email',
+                              value=data.email, error=errors.email, classes=['control-medium'],
+                              is_required=true) }}
 
-            {{ form.markdown('content', label=_('Your Request'), id='field-content',
-                             value=data.content, error=errors.content,
-                             placeholder=_('What do you have to tell us?'), is_required=true) }}
-        {% endblock %}
+                {{ form.markdown('content', label=_('Your Request'), id='field-content',
+                                 value=data.content, error=errors.content,
+                                 placeholder=_('What do you have to tell us?'), is_required=true) }}
+            {% endblock %}
+        </fieldset>
 
-        {% block contact_recaptcha %}
-            {% if g.recaptcha_publickey %}
-                {% snippet "user/snippets/recaptcha.html", public_key=g.recaptcha_publickey %}
-            {% endif %}
-        {% endblock %}
-    </fieldset>
+        <div class="form-actions">
+            {% block contact_form_actions %}
+                {{ form.required_message() }}
 
-    <div class="form-actions">
-        {% block contact_form_actions %}
-            {{ form.required_message() }}
-            <button class="btn btn-primary save" type="submit" name="save">
-                {{ _('Submit') }}
-            </button>
-        {% endblock %}
-    </div>
-</form>
+                <button class="btn btn-primary save" type="submit" name="save">
+                    {{ _('Submit') }}
+                </button>
+            {% endblock %}
+        </div>
+    </form>
 {% endblock %}
+
