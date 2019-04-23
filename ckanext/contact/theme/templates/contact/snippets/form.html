@@ -18,9 +18,11 @@
                              is_required=true) }}
         {% endblock %}
 
-        {% if g.recaptcha_publickey %}
-            {% snippet "user/snippets/recaptcha.html", public_key=g.recaptcha_publickey %}
-        {% endif %}
+        {% block contact_recaptcha %}
+            {% if g.recaptcha_publickey %}
+                {% snippet "user/snippets/recaptcha.html", public_key=g.recaptcha_publickey %}
+            {% endif %}
+        {% endblock %}
     </fieldset>
 
     <div class="form-actions">
