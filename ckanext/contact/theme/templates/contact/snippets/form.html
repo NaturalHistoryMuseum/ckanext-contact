@@ -10,12 +10,13 @@
             {{ form.input('name', label=_('Contact Name'), id='field-name', value=data.name,
                           error=errors.name, classes=['control-medium'], is_required=true) }}
 
-            {{ form.input('email', label=_('Email'), id='field-email', type='email', value=data.email,
-                          error=errors.email, classes=['control-medium'], is_required=true) }}
+            {{ form.input('email', label=_('Email'), id='field-email', type='email',
+                          value=data.email, error=errors.email, classes=['control-medium'],
+                          is_required=true) }}
 
-            {{ form.markdown('content', label=_('Your Request'), id='field-content', value=data.content,
-                             error=errors.content, placeholder=_('What do you have to tell us?'),
-                             is_required=true) }}
+            {{ form.markdown('content', label=_('Your Request'), id='field-content',
+                             value=data.content, error=errors.content,
+                             placeholder=_('What do you have to tell us?'), is_required=true) }}
         {% endblock %}
 
         {% block contact_recaptcha %}
@@ -28,7 +29,9 @@
     <div class="form-actions">
         {% block contact_form_actions %}
             {{ form.required_message() }}
-            <button class="btn btn-primary save" type="submit" name="save">{{ _('Submit') }}</button>
+            <button class="btn btn-primary save" type="submit" name="save">
+                {{ _('Submit') }}
+            </button>
         {% endblock %}
     </div>
 </form>
