@@ -1,12 +1,13 @@
 """
 CKAN Contact Extension
 """
-import os
 from logging import getLogger
+
 import ckan.plugins as p
 from ckanext.contact.auth import send_contact
 
 log = getLogger(__name__)
+
 
 class ContactPlugin(p.SingletonPlugin):
     """
@@ -24,7 +25,6 @@ class ContactPlugin(p.SingletonPlugin):
 
     ## IRoutes
     def before_map(self, map):
-
         # Add controller for KE EMu specimen records
         map.connect('contact_form', '/contact',
                     controller='ckanext.contact.controllers.contact:ContactController',
@@ -40,4 +40,3 @@ class ContactPlugin(p.SingletonPlugin):
     ## IAuthFunctions
     def get_auth_functions(self):
         return {'send_contact': send_contact}
-
