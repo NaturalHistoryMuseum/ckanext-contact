@@ -1,8 +1,11 @@
 {% import 'macros/form.html' as form %}
 {% resource 'ckanext-contact/main' %}
 
+{% set recaptcha_v3_key = h.get_recaptcha_v3_key() %}
+{% set recaptcha_v3_action = h.get_recaptcha_v3_action() %}
+
 {% block contact_form %}
-    <form class="contact-form form-horizontal" method="post" data-module="recaptcha-contact"
+    <form class="contact-form form-horizontal" method="post" data-module="form-contact"
           data-module-action="{{ recaptcha_v3_action }}" data-module-key="{{ recaptcha_v3_key }}">
 
         {{ form.errors(error_summary) }}

@@ -1,158 +1,132 @@
-/* Loads the Image into a modal dialog.
+/*
+ * Modal contact form, triggered from the a tag the module is loaded onto. Uses ajax to post the
+ * message to the server.
  *
- * Examples
+ * Example:
  *
- *   <a data-module="modal-image"">Image</a>
+ *   <a data-module="modal-contact">Contact</a>
  *
  */
-this.ckan.module('modal-contact', function (jQuery, _) {
-  var self
-  return {
+ckan.module('modal-contact', function($, _) {
+    let self;
 
-    /* holds the loaded lightbox */
-    modal: null,
+    return {
+        /**
+         * Initialises the module by setting up the recaptcha if necessary and setting up event
+         * listeners.
+         */
+        initialize: function() {
+            self = this;
+            self.modal = null;
+            self.messages = {
+                'onSuccess': _('Thank you for contacting us, and we will try and reply as soon as possible.<br />Unfortunately due to the number of enquiries the Museum receives, we cannot always reply in person to every one.'),
+                'onError': _('Sorry, there was an error sending the email. Please try again later.')
+            };
+            // define the template if it is not passed
+            self.options.template = self.options.template || 'contact_form.html';
+            if (self.options.key) {
+                self.context = window.contacts_recaptcha.load(self.options.key, self.options.action);
+            }
+            self.el.on('click', self._onClick);
+        },
 
-    options: {
-      template: '/api/1/util/snippet/contact_form.html',
-      i18n: {
-        noTemplate: _('Sorry, we could not load the contact form. Please try again later.'),
-        loadError: _('Sorry, we could not load the contact form. Please try again later.'),
-        onSuccess: _('Thank you for contacting us, and we will try and reply as soon as possible.<br />Unfortunately due to the number of enquiries the Museum receives, we cannot always reply in person to every one.'),
-        onError: _('Sorry, there was an error sending the email. Please try again later.')
-      }
-    },
+        /**
+         * Loads and displays the contact form modal.
+         */
+        show: function() {
+            self.sandbox.client.getTemplate('contact_form.html', self.options, function(html) {
+                self.modal = $(html);
+                self.modal.find('.modal-header :header').append('<button class="close" data-dismiss="modal">×</button>');
+                self.modal.find('form').submit(function(event) {
+                    event.preventDefault();
 
-    /* Sets up event listeners
-     *
-     * Returns nothing.
-     */
-    initialize: function () {
-      self = this;
-      jQuery.proxyAll(this, /_on/);
-      this.el.on('click', this._onClick);
-    },
+                    let form = self.modal.find('form');
 
-    /* Loading
-     *
-     */
-    loading: function (loading) {
-      this.el.button(loading !== false ? 'loading' : 'reset');
-    },
+                    if (self.context) {
+                        self.context.addToken(form).then(function(token) {
+                            self.sendForm(form);
+                        });
+                    } else {
+                        self.sendForm(form);
+                    }
 
-    /* Displays the image
-     *
-     */
-    show: function () {
-      var sandbox = this.sandbox,
-          module = this;
+                    // TODO: Add cancel button
+                });
 
-      this.loadTemplate().done(function (html) {
+                self.modal.modal().appendTo(self.sandbox.body);
+            });
 
-        module.modal = jQuery(html);
-        module.modal.find('.modal-header :header').append('<button class="close" data-dismiss="modal">×</button>');
-        module.modal.find('form').submit(function(event){
+        },
 
-            event.preventDefault();
-            var form = $(this);
-
-            jQuery.ajax({
+        sendForm: function(form) {
+            $.ajax({
                 url: '/contact/ajax',
-                type: this.method,
+                type: self.method,
                 data: form.serialize(),
-                success: function (results) {
-                    if (results.data['success'] !== undefined){
-                        module.hide();
-                        self.flash_success(self.i18n('onSuccess'))
-                    } else if (!jQuery.isEmptyObject(results.errors)){
+                success: function(results) {
+                    if (results.success) {
+                        self.hide();
+                        self.flash_success(self.i18n(self.messages.onSuccess))
+                    } else if (!$.isEmptyObject(results.errors)) {
                         self.processFormError(form, results.errors)
-                    }else{
-                        // If not success and there's no user input errors, the email submission has failed
-                        module.hide();
-                        self.flash_error(self.i18n('onError'));
+                    } else if (!!results.recaptcha_error) {
+                        self.hide();
+                        self.flash_error(results.recaptcha_error);
+                    } else {
+                        // if not success and there's no user input errors, the email
+                        // submission has failed
+                        self.hide();
+                        self.flash_error(self.i18n(self.messages.onError));
                     }
                 }
-              });
+            });
+        },
 
-            // TODO: Add cancel button
+        /**
+         * Process errors returned from form submission process.
+         */
+        processFormError: function(form, errors) {
+            // remove all errors & classes
+            form.find('.error-block').remove();
+            form.find('.error').removeClass('error');
 
-        });
+            // loop through all the errors, adding the error message and error classes
+            for (let k in errors) {
+                let controls = form.find("[name='" + k + "']").parent('.controls');
+                controls.append('<span class="error-block">' + errors[k] + '</span>');
+                controls.parent('.control-group').addClass('error');
+            }
+        },
 
-        module.modal.modal().appendTo(sandbox.body);
+        /**
+         * Hides the modal.
+         */
+        hide: function() {
+            if (self.modal) {
+                self.modal.modal('hide');
+            }
+        },
 
-      });
+        flash_error: function(message) {
+            self.flash(message, 'alert-error')
+        },
 
-    },
+        flash_success: function(message) {
+            self.flash(message, 'alert-success')
+        },
 
-    /* Process errors returned from form submission process
-     *
-     */
-    processFormError: function (form, errors) {
-        // Remove all errors & classes
-        form.find('.error-block').remove();
-        form.find('.error').removeClass('error');
+        flash: function(message, category) {
+            $('.flash-messages').append('<div class="alert ' + category + '">' + message + '</div>');
+        },
 
-        // Lop through all the errors, adding the error message and error classes
-        for (var k in errors){
-            var controls = form.find("[name='" + k + "']").parent('.controls');
-            controls.append('<span class="error-block">' + errors[k] + '</span>');
-            controls.parent('.control-group').addClass('error');
-        }
-    },
-
-    /* Hides the modal.
-     *
-     */
-    hide: function () {
-      if (this.modal) {
-        this.modal.modal('hide');
-      }
-    },
-
-    flash_error: function (message) {
-        this.flash(message, 'alert-error')
-    },
-
-    flash_success: function (message) {
-        this.flash(message, 'alert-success')
-    },
-
-    flash: function (message, category) {
-        $('.flash-messages').append('<div class="alert ' + category + '">' + message + '</div>');
-    },
-
-    loadTemplate: function () {
-
-      if (!this.options.template) {
-        this.sandbox.notify(this.i18n('noTemplate'));
-        return jQuery.Deferred().reject().promise();
-      }
-
-      if (!this.promise) {
-        this.loading();
-
-        // This should use sandbox.client!
-        this.promise = jQuery.get(this.options.template);
-        this.promise.then(this._onTemplateSuccess, this._onTemplateError);
-      }
-      return this.promise;
-    },
-
-    /* Event handler for clicking on the element */
-    _onClick: function (event) {
-      event.preventDefault();
-      this.show();
-    },
-
-    /* Success handler for when the template is loaded */
-    _onTemplateSuccess: function () {
-      this.loading(false);
-    },
-
-    /* error handler when the template fails to load */
-    _onTemplateError: function () {
-      this.loading(false);
-      this.sandbox.notify(this.i18n('loadError'));
-    }
-
-  };
+        /**
+         * Event handler for clicking on the element.
+         *
+         * @private
+         */
+        _onClick: function(event) {
+            event.preventDefault();
+            self.show();
+        },
+    };
 });
