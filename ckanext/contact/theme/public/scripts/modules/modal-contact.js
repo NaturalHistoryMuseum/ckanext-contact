@@ -37,10 +37,8 @@ ckan.module('modal-contact', function($, _) {
                 // initialise the recaptcha context. By doing this here in the show function we
                 // avoid showing the recaptcha badge on the page before the user has even given an
                 // indication that they want to contact us which avoids confusion
-                if (self.options.key) {
-                    self.context = window.contacts_recaptcha.load(self.options.key,
-                        self.options.action);
-                }
+                self.context = window.contacts_recaptcha.load(self.options.key,
+                    self.options.action);
 
                 self.modal = $(html);
                 // add a close button to the modal

@@ -13,8 +13,7 @@ window.contacts_recaptcha = window.contacts_recaptcha || (function() {
      * @constructor
      */
     const RecaptchaContext = function(key, action) {
-        // store internal state against this variable
-        let self = {};
+        let self = this;
 
         // setup some basic attributes
         self.key = key;
@@ -86,8 +85,40 @@ window.contacts_recaptcha = window.contacts_recaptcha || (function() {
         return self;
     };
 
+    /**
+     * Checks whether recaptcha is enabled or not based on whether the key and action passed are
+     * valid. This check simply confirms that the two values are truthy and do not equal 'None'.
+     * This comes from the get_recaptcha_v3_action and get_recaptcha_v3_key helpers which return
+     * None if the config values aren't defined. Because these values then get stringified in the
+     * jinja2 templates into html tag attributes they end up here in the javascript as the string
+     * 'None'.
+     *
+     * @param key the key value
+     * @param action the action value
+     * @returns {boolean}
+     */
+    const isRecaptchaEnabled = function(key, action) {
+        return key && action && key !== 'None' && action !== 'None';
+    };
+
+    /**
+     * Creates a RecaptchaContext object and returns it if the key and action are valid.
+     *
+     * @param key
+     * @param action
+     * @returns {RecaptchaContext|boolean}
+     */
+    const load = function(key, action) {
+        if (isRecaptchaEnabled(key, action)) {
+            return new RecaptchaContext(key, action);
+        } else {
+            return false;
+        }
+    };
+
     // return the module interface
     return {
-        'load': RecaptchaContext
+        load: load,
+        isRecaptchaEnabled: isRecaptchaEnabled
     };
 }());
