@@ -1,6 +1,6 @@
 /*
  * Modal contact form, triggered from the a tag the module is loaded onto. Uses ajax to post the
- * message to the server.
+ * contact form to the server.
  *
  * Example:
  *

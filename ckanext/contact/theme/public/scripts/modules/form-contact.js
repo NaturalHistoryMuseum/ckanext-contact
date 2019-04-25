@@ -1,3 +1,12 @@
+/*
+ * Non-modal contact form. Should be attached to the form itself. The data is sent as a standard
+ * POST form submit.
+ *
+ * Example:
+ *
+ *   <form data-module="form-contact"> ... </form>
+ *
+ */
 ckan.module('form-contact', function($, _) {
     let self = null;
 
