@@ -19,7 +19,9 @@ ckan.module('modal-contact', function($, _) {
             self = this;
             self.modal = null;
             self.messages = {
-                'onSuccess': _('Thank you for contacting us, and we will try and reply as soon as possible.<br />Unfortunately due to the number of enquiries the Museum receives, we cannot always reply in person to every one.'),
+                'onSuccess': _('Thank you for contacting us, and we will try and reply as soon ' +
+                    'as possible.<br />Unfortunately due to the number of enquiries the Museum ' +
+                    'receives, we cannot always reply in person to every one.'),
                 'onError': _('Sorry, there was an error sending the email. Please try again later.')
             };
             // define the template if it is not passed
@@ -36,15 +38,19 @@ ckan.module('modal-contact', function($, _) {
                 // avoid showing the recaptcha badge on the page before the user has even given an
                 // indication that they want to contact us which avoids confusion
                 if (self.options.key) {
-                    self.context = window.contacts_recaptcha.load(self.options.key, self.options.action);
+                    self.context = window.contacts_recaptcha.load(self.options.key,
+                        self.options.action);
                 }
+
                 self.modal = $(html);
-                self.modal.find('.modal-header :header').append('<button class="close" data-dismiss="modal">×</button>');
+                // add a close button to the modal
+                self.modal.find('.modal-header :header')
+                    .append('<button class="close" data-dismiss="modal">×</button>');
+                // hook onto the submit event of the form
                 self.modal.find('form').submit(function(event) {
                     event.preventDefault();
 
                     let form = self.modal.find('form');
-
                     if (self.context) {
                         self.context.addToken(form).then(function(token) {
                             self.sendForm(form);
@@ -61,23 +67,31 @@ ckan.module('modal-contact', function($, _) {
 
         },
 
+        /**
+         * Sends the form's data to the server.
+         *
+         * @param form the form element to harvest the data from
+         */
         sendForm: function(form) {
             $.ajax({
                 url: '/contact/ajax',
-                type: self.method,
+                type: 'POST',
                 data: form.serialize(),
                 success: function(results) {
                     if (results.success) {
+                        // it worked, woo!
                         self.hide();
                         self.flash_success(self.i18n(self.messages.onSuccess))
                     } else if (!$.isEmptyObject(results.errors)) {
+                        // there were errors in the inputs from the user, likely missing values
                         self.processFormError(form, results.errors)
                     } else if (!!results.recaptcha_error) {
+                        // the recaptcha failed
                         self.hide();
                         self.flash_error(results.recaptcha_error);
                     } else {
-                        // if not success and there's no user input errors, the email
-                        // submission has failed
+                        // if we get here then something went wrong server side, probably when
+                        // sending the email
                         self.hide();
                         self.flash_error(self.i18n(self.messages.onError));
                     }
@@ -110,16 +124,33 @@ ckan.module('modal-contact', function($, _) {
             }
         },
 
+        /**
+         * Flash the given message as an error.
+         *
+         * @param message the message
+         */
         flash_error: function(message) {
             self.flash(message, 'alert-error')
         },
 
+        /**
+         * Flash the given message as a success.
+         *
+         * @param message the message
+         */
         flash_success: function(message) {
             self.flash(message, 'alert-success')
         },
 
+        /**
+         * Create a flash and display it.
+         *
+         * @param message the flash message
+         * @param category the type of flash to show, this is used as the css class
+         */
         flash: function(message, category) {
-            $('.flash-messages').append('<div class="alert ' + category + '">' + message + '</div>');
+            $('.flash-messages')
+                .append('<div class="alert ' + category + '">' + message + '</div>');
         },
 
         /**
