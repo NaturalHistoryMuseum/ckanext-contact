@@ -24,9 +24,6 @@ ckan.module('modal-contact', function($, _) {
             };
             // define the template if it is not passed
             self.options.template = self.options.template || 'contact_form.html';
-            if (self.options.key) {
-                self.context = window.contacts_recaptcha.load(self.options.key, self.options.action);
-            }
             self.el.on('click', self._onClick);
         },
 
@@ -35,6 +32,12 @@ ckan.module('modal-contact', function($, _) {
          */
         show: function() {
             self.sandbox.client.getTemplate('contact_form.html', self.options, function(html) {
+                // initialise the recaptcha context. By doing this here in the show function we
+                // avoid showing the recaptcha badge on the page before the user has even given an
+                // indication that they want to contact us which avoids confusion
+                if (self.options.key) {
+                    self.context = window.contacts_recaptcha.load(self.options.key, self.options.action);
+                }
                 self.modal = $(html);
                 self.modal.find('.modal-header :header').append('<button class="close" data-dismiss="modal">×</button>');
                 self.modal.find('form').submit(function(event) {
