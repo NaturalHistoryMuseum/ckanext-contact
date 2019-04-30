@@ -121,8 +121,7 @@ class ContactController(base.BaseController):
                 plugin.mail_alter(mail_dict, data_dict)
 
             try:
-                pass
-                # mailer.mail_recipient(**mail_dict)
+                mailer.mail_recipient(**mail_dict)
             except (mailer.MailerException, socket.error):
                 email_success = False
 
