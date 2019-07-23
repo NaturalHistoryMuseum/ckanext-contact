@@ -6,18 +6,26 @@
 
 from setuptools import find_packages, setup
 
-version = u'0.2'
+__version__ = u'1.0.0-alpha'
+
+with open(u'README.md', u'r') as f:
+    __long_description__ = f.read()
 
 setup(
     name=u'ckanext-contact',
-    version=version,
-    description=u'CKAN Extension providing Contact / Feedback form',
-    classifiers=[],
-    keywords=u'',
-    author=u'Ben Scott',
-    author_email=u'ben@benscott.co.uk',
-    url=u'',
-    license=u'',
+    version=__version__,
+    description=u'A CKAN extension for adding popup contact forms to pages.',
+    long_description=__long_description__,
+    classifiers=[
+        u'Development Status :: 3 - Alpha',
+        u'Framework :: Flask',
+        u'Programming Language :: Python :: 2.7'
+    ],
+    keywords=u'CKAN data contact',
+    author=u'Natural History Museum',
+    author_email=u'data@nhm.ac.uk',
+    url=u'https://github.com/NaturalHistoryMuseum/ckanext-contact',
+    license=u'GNU GPLv3',
     packages=find_packages(exclude=[u'tests']),
     namespace_packages=[u'ckanext', u'ckanext.contact'],
     include_package_data=True,
