@@ -4,6 +4,7 @@
 # This file is part of ckanext-contact
 # Created by the Natural History Museum in London, UK
 
+import functools
 from logging import getLogger
 
 from ckanext.contact.auth import send_contact
@@ -18,12 +19,13 @@ class ContactPlugin(SingletonPlugin):
     implements(interfaces.IRoutes, inherit=True)
     implements(interfaces.IConfigurer)
     implements(interfaces.IAuthFunctions)
+    implements(interfaces.ITemplateHelpers, inherit=True)
 
     ## IConfigurer
     def update_config(self, config):
         '''
 
-        :param config: 
+        :param config:
 
         '''
         toolkit.add_template_directory(config, u'theme/templates')
@@ -34,7 +36,7 @@ class ContactPlugin(SingletonPlugin):
     def before_map(self, map):
         '''
 
-        :param map: 
+        :param map:
 
         '''
 
@@ -55,4 +57,14 @@ class ContactPlugin(SingletonPlugin):
         ''' '''
         return {
             u'send_contact': send_contact
+            }
+
+    ## ITemplateHelpers
+    def get_helpers(self):
+        ''' '''
+        return {
+            u'get_recaptcha_v3_action':
+                functools.partial(toolkit.config.get, u'ckanext.contact.recaptcha_v3_action', None),
+            u'get_recaptcha_v3_key':
+                functools.partial(toolkit.config.get, u'ckanext.contact.recaptcha_v3_key', None)
             }

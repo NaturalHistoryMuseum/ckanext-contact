@@ -2,6 +2,9 @@
 
 (This file may not be historically complete, as it is a recent addition to the project).
 
+## [1.1.0-alpha] - 2019-07-26
+
+- Merged in changes from master branch (which still runs on CKAN 2.3.0a) to enable reCAPTCHA
 
 ## [1.0.0-alpha] - 2019-07-23
 

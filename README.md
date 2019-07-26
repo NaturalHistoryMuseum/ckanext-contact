@@ -15,6 +15,8 @@ Borrows much of the contact form code from [ckanext-surrey](https://github.com/C
 
 An example can be seen on the Natural History Museum's [Data Portal](https://data.nhm.ac.uk) when clicking "_Contact dataset curator._"
 
+This extension now includes Google's [reCAPTCHA](https://www.google.com/recaptcha) for preventing spam submissions.
+
 
 # Installation
 
@@ -60,12 +62,26 @@ Path variables used below:
 
 There are no settings that _must_ be provided in your .ini config file, but there are some options:
 
+## Email
+
 Name|Description|Default
---|---|--
+--|--|--
 `ckanext.contact.mail_to`|Email address to submit to|`email_to`
 `ckanext.contact.recipient_name`|Name of the recipient|`ckan.site_title`
 `ckanext.contact.subject`|Email subject for the submitted form|'Contact/Question from visitor'
 
+## Recaptcha
+
+Name|Description|Default
+--|--|--
+`ckanext.contact.recaptcha_v3_key`|API key for the reCAPTCHA service.|False (i.e. disabled)
+`ckanext.contact.recaptcha_v3_secret`|API secret for the reCAPTCHA service.|False (i.e. disabled)
+`ckanext.contact.recaptcha_v3_action`|`data-module-action` for the form/button|  
+
+
+# Further Setup
+
+To use reCAPTCHA, you must register a site with the Google [reCAPTCHA](https://www.google.com/recaptcha) service and add your API key and secret in the [configuration](#configuration).
 
 # Usage
 
