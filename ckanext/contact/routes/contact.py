@@ -17,7 +17,7 @@ from ckan.plugins import PluginImplementations, toolkit
 
 log = logging.getLogger(__name__)
 
-blueprint = Blueprint(name=u'contact', import_name=__name__, url_prefix=u'/contact')
+blueprint = Blueprint(name=u'contact', import_name=__name__, url_prefix='/contact')
 
 
 def _context():
@@ -43,7 +43,7 @@ def before_request():
         toolkit.abort(401, toolkit._(u'Not authorized to use contact form'))
 
 
-@blueprint.route(u'')
+@blueprint.route('')
 def form():
     '''
     Form based interaction, if called as a POST request the request params are used to send the
@@ -80,7 +80,7 @@ def form():
     return toolkit.render(u'contact/form.html', extra_vars=extra_vars)
 
 
-@blueprint.route(u'/ajax')
+@blueprint.route('/ajax')
 def ajax_submit():
     '''
     AJAX form submission.
