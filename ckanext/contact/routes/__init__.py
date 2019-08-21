@@ -4,11 +4,6 @@
 # This file is part of ckanext-contact
 # Created by the Natural History Museum in London, UK
 
+from . import contact
 
-def main():
-    ''' '''
-    pass
-
-
-if __name__ == u'__main__':
-    main()
+blueprints = [contact.blueprint]
