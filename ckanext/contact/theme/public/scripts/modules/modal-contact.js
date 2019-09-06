@@ -60,6 +60,11 @@ ckan.module('modal-contact', function($, _) {
                     // TODO: Add cancel button
                 });
 
+                // make sure the popover in the contact form works
+                if ($.fn.popover !== undefined) {
+                  self.modal.find('[data-target="popover"]').popover();
+                }
+
                 self.modal.modal().appendTo(self.sandbox.body);
             });
 
