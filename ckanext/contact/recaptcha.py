@@ -1,7 +1,5 @@
 import requests
-from pylons import config, request
-
-from ckan.common import _
+from ckan.plugins import toolkit
 
 
 class RecaptchaError(ValueError):
@@ -16,8 +14,8 @@ def check_recaptcha(token, expected_action):
     :param token: the token as returned in the frontend by a call to execute
     :param expected_action: the expected action associated with the token
     '''
-    key = config.get(u'ckanext.contact.recaptcha_v3_key', False)
-    secret = config.get(u'ckanext.contact.recaptcha_v3_secret', False)
+    key = toolkit.config.get(u'ckanext.contact.recaptcha_v3_key', False)
+    secret = toolkit.config.get(u'ckanext.contact.recaptcha_v3_secret', False)
 
     if not key or not secret:
         # recaptcha not enabled
@@ -27,7 +25,7 @@ def check_recaptcha(token, expected_action):
         u'secret': secret,
         u'response': token,
     }
-    client_ip_address = request.environ.get(u'REMOTE_ADDR', None)
+    client_ip_address = toolkit.request.environ.get(u'REMOTE_ADDR', None)
     if client_ip_address:
         post_params[u'remoteip'] = client_ip_address
 
@@ -38,4 +36,4 @@ def check_recaptcha(token, expected_action):
     if not result[u'success']:
         raise RecaptchaError(u', '.join(result[u'error-codes']))
     if expected_action != result[u'action']:
-        raise RecaptchaError(_(u'Action mismatch'))
+        raise RecaptchaError(toolkit._(u'Action mismatch'))
