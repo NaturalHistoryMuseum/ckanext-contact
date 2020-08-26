@@ -2,33 +2,23 @@
 
 {% block breadcrumb_content %}
     {{ super() }}
-  <li><a href="{{ h.url_for('contact.form') }}">Contact</a></li>
-
+    <li>
+      <a href="{{ h.url_for('contact.form') }}">{{ _('Contact') }}</a>
+    </li>
 {% endblock %}
 
-{% block primary_content %}
-  <article class="module">
-    <div class="module-content">
-      <h1 class="page-heading">Contact us</h1>
-
-        {% block contact_form_content %}
-            {% include "contact/snippets/form.html" %}
-        {% endblock %}
-
-    </div>
-  </article>
+{% block secondary %}
 {% endblock %}
 
-{% block secondary_content %}
-<div class="module module-narrow module-shallow">
-  <h2 class="module-heading">
-    <i class="fas fa-info-circle inline-icon-left"></i>
-    {{ _('Contact Us') }}
-  </h2>
-  <div class="module-content">
-    <p>
-      Questions? Comments? We are always glad to hear from you!
-    </p>
-  </div>
-</div>
+{% block primary %}
+    <article class="module">
+        <div class="module-content">
+            <h1 class="page-heading">{{ _('Contact us') }}</h1>
+
+            {% block contact_form_content %}
+                {% include "contact/snippets/form.html" %}
+            {% endblock %}
+
+        </div>
+    </article>
 {% endblock %}
