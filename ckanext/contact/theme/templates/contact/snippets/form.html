@@ -11,6 +11,13 @@
         {{ form.errors(error_summary) }}
 
         <fieldset>
+            {% block contact_form_legend %}
+                <legend>
+                    {% block contact_form_legend_content %}
+                        {{ _('Questions? Comments? We are always glad to hear from you!') }}
+                    {% endblock %}
+                </legend>
+            {% endblock %}
             {% block contact_form_fields %}
                 {{ form.input('name', label=_('Contact Name'), id='field-name', value=data.name,
                               error=errors.name, classes=['control-medium'], is_required=true) }}
@@ -36,4 +43,3 @@
         </div>
     </form>
 {% endblock %}
-
