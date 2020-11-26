@@ -1,0 +1,10 @@
+main:
+  output: ckanext-contact/%(version)s_main.js
+  filters: rjsmin
+  extra:
+    preload:
+      - base/main
+  contents:
+    - scripts/recaptcha_helpers.js
+    - modules/modal-contact.js
+    - modules/form-contact.js

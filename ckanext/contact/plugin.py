@@ -30,8 +30,7 @@ class ContactPlugin(SingletonPlugin):
 
         '''
         toolkit.add_template_directory(config, u'theme/templates')
-        toolkit.add_public_directory(config, u'theme/public')
-        toolkit.add_resource(u'theme/public', u'ckanext-contact')
+        toolkit.add_resource(u'theme/assets', u'ckanext-contact')
 
     ## IBlueprint
     def get_blueprint(self):
