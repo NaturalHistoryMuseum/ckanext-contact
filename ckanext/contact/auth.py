@@ -10,17 +10,11 @@ from ckan.plugins import toolkit
 @toolkit.auth_allow_anonymous_access
 def send_contact(context, data_dict):
     '''
+    Auth for sending the contact form, always returns true.
 
     :param context:
     :param data_dict:
-
     '''
-    if True:
-        return {
-            'success': True
-        }
-    else:
-        return {
-            'success': False,
-            'msg': 'Not allowed to use contact form'
-        }
+    return {
+        'success': True
+    }
