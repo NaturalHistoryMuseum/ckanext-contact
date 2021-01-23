@@ -101,10 +101,24 @@ Where `params` is a dict with three entries: package_id, resource_id, record_id 
 
 
 # Testing
-
 _Test coverage is currently extremely limited._
 
-To run the tests, use nosetests inside your virtualenv. The `--nocapture` flag will allow you to see the debug statements.
+To run the tests in this extension, there is a Docker compose configuration available in this
+repository to make it easy.
+
+To run the tests against ckan 2.9.x on Python2:
+
+1. Build the required images
 ```bash
-nosetests --ckan --with-pylons=$TEST_CONFIG_FILE --where=$INSTALL_FOLDER/src/ckanext-contact --nologcapture --nocapture
+docker-compose build
 ```
+
+2. Then run the tests.
+   The root of the repository is mounted into the ckan container as a volume by the Docker compose
+   configuration, so you should only need to rebuild the ckan image if you change the extension's
+   dependencies.
+```bash
+docker-compose run ckan
+```
+
+The ckan image uses the Dockerfile in the `docker/` folder which is based on `openknowledge/ckan-dev:2.9-py2`

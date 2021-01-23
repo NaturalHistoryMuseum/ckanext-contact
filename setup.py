@@ -32,7 +32,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'requests>=2.10.0',
-        ],
+    ],
     entry_points= \
         u'''
         [ckan.plugins]
