@@ -4,7 +4,7 @@
 
 [![Travis](https://img.shields.io/travis/NaturalHistoryMuseum/ckanext-contact/master.svg?style=flat-square)](https://travis-ci.org/NaturalHistoryMuseum/ckanext-contact)
 [![Coveralls](https://img.shields.io/coveralls/github/NaturalHistoryMuseum/ckanext-contact/master.svg?style=flat-square)](https://coveralls.io/github/NaturalHistoryMuseum/ckanext-contact)
-[![CKAN](https://img.shields.io/badge/ckan-2.9.0a-orange.svg?style=flat-square)](https://github.com/ckan/ckan)
+[![CKAN](https://img.shields.io/badge/ckan-2.9.1-orange.svg?style=flat-square)](https://github.com/ckan/ckan)
 
 _A CKAN extension for adding popup contact forms to pages._
 
@@ -76,7 +76,7 @@ Name|Description|Default
 --|--|--
 `ckanext.contact.recaptcha_v3_key`|API key for the reCAPTCHA service.|False (i.e. disabled)
 `ckanext.contact.recaptcha_v3_secret`|API secret for the reCAPTCHA service.|False (i.e. disabled)
-`ckanext.contact.recaptcha_v3_action`|`data-module-action` for the form/button|  
+`ckanext.contact.recaptcha_v3_action`|`data-module-action` for the form/button|
 
 
 # Further Setup
