@@ -11,16 +11,16 @@ from ckan.plugins import toolkit
 def send_contact(context, data_dict):
     '''
 
-    :param context: 
-    :param data_dict: 
+    :param context:
+    :param data_dict:
 
     '''
     if True:
         return {
-            u'success': True
+            'success': True
         }
     else:
         return {
-            u'success': False,
-            u'msg': u'Not allowed to use contact form'
+            'success': False,
+            'msg': 'Not allowed to use contact form'
         }

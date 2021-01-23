@@ -6,17 +6,17 @@ from mock import MagicMock
 
 
 def test_auth_always_succeeds_direct():
-    assert send_contact(MagicMock(), MagicMock()) == {u'success': True}
+    assert send_contact(MagicMock(), MagicMock()) == {'success': True}
 
 
-@pytest.mark.ckan_config(u'ckan.plugins', u'contact')
-@pytest.mark.usefixtures(u'with_plugins')
+@pytest.mark.ckan_config('ckan.plugins', 'contact')
+@pytest.mark.usefixtures('with_plugins')
 def test_auth_always_succeeds_anonymous():
-    assert toolkit.check_access(u'send_contact', {})
+    assert toolkit.check_access('send_contact', {})
 
 
-@pytest.mark.ckan_config(u'ckan.plugins', u'contact')
-@pytest.mark.usefixtures(u'with_plugins', u'clean_db')
+@pytest.mark.ckan_config('ckan.plugins', 'contact')
+@pytest.mark.usefixtures('with_plugins', 'clean_db')
 def test_auth_always_succeeds_with_user():
     user = factories.User()
-    assert toolkit.check_access(u'send_contact', {'user': user[u'name']})
+    assert toolkit.check_access('send_contact', {'user': user['name']})

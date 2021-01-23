@@ -6,20 +6,20 @@
 
 import logging
 
+from ckan.plugins import toolkit
 from flask import Blueprint, jsonify
 
-from ckan.plugins import toolkit
 from . import _helpers
 
 log = logging.getLogger(__name__)
 
-blueprint = Blueprint(name=u'contact', import_name=__name__, url_prefix='/contact')
+blueprint = Blueprint(name='contact', import_name=__name__, url_prefix='/contact')
 
 
 def _context():
     return {
-        u'user': toolkit.c.user or toolkit.c.author
-        }
+        'user': toolkit.c.user or toolkit.c.author
+    }
 
 
 @blueprint.before_request
@@ -34,9 +34,9 @@ def before_request():
     '''
 
     try:
-        toolkit.check_access(u'send_contact', _context())
+        toolkit.check_access('send_contact', _context())
     except toolkit.NotAuthorized:
-        toolkit.abort(401, toolkit._(u'Not authorized to use contact form'))
+        toolkit.abort(401, toolkit._('Not authorized to use contact form'))
 
 
 @blueprint.route('', methods=['GET', 'POST'])
@@ -49,31 +49,31 @@ def form():
     '''
     # dict of context values for the template renderer
     extra_vars = {
-        u'data': {},
-        u'errors': {},
-        u'error_summary': {},
-        }
+        'data': {},
+        'errors': {},
+        'error_summary': {},
+    }
 
-    if toolkit.request.method == u'POST':
+    if toolkit.request.method == 'POST':
         result = _helpers.submit()
-        if result.get(u'success', False):
-            return toolkit.render(u'contact/success.html')
+        if result.get('success', False):
+            return toolkit.render('contact/success.html')
         else:
             # the form page isn't setup to handle this error so we need to flash it here for it
-            if result[u'recaptcha_error'] is not None:
-                toolkit.h.flash_error(result[u'recaptcha_error'])
+            if result['recaptcha_error'] is not None:
+                toolkit.h.flash_error(result['recaptcha_error'])
             # note that this copies over an recaptcha error key/value present in the submit
             # result
             extra_vars.update(result)
     else:
         # try and use logged in user values for default values
         try:
-            extra_vars[u'data'][u'name'] = toolkit.c.userobj.fullname or toolkit.c.userobj.name
-            extra_vars[u'data'][u'email'] = toolkit.c.userobj.email
+            extra_vars['data']['name'] = toolkit.c.userobj.fullname or toolkit.c.userobj.name
+            extra_vars['data']['email'] = toolkit.c.userobj.email
         except AttributeError:
-            extra_vars[u'data'][u'name'] = extra_vars[u'data'][u'email'] = None
+            extra_vars['data']['name'] = extra_vars['data']['email'] = None
 
-    return toolkit.render(u'contact/form.html', extra_vars=extra_vars)
+    return toolkit.render('contact/form.html', extra_vars=extra_vars)
 
 
 @blueprint.route('/ajax', methods=['POST'])
