@@ -84,17 +84,19 @@ def submit():
 
     # if there are not errors and no recaptcha error, attempt to send the email
     if len(errors) == 0 and recaptcha_error is None:
-        body = f'{data_dict["content"]}\n\n' \
-               f'Sent by:\n' \
-               f'Name: {data_dict["name"]}\n' \
-               f'Email: {data_dict["email"]}\n'
+        body_parts = [
+            f'{data_dict["content"]}\n',
+            'Sent by:',
+            f'  Name: {data_dict["name"]}',
+            f'  Email: {data_dict["email"]}'
+        ]
         mail_dict = {
             'recipient_email': toolkit.config.get('ckanext.contact.mail_to',
                                                   toolkit.config.get('email_to')),
             'recipient_name': toolkit.config.get('ckanext.contact.recipient_name',
                                                  toolkit.config.get('ckan.site_title')),
             'subject': build_subject(),
-            'body': body,
+            'body': '\n'.join(body_parts),
             'headers': {
                 'reply-to': data_dict['email']
             }
