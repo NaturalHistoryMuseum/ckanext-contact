@@ -70,6 +70,7 @@ Name|Description|Default
 `ckanext.contact.mail_to`|Email address to submit to|`email_to`
 `ckanext.contact.recipient_name`|Name of the recipient|`ckan.site_title`
 `ckanext.contact.subject`|Email subject for the submitted form|'Contact/Question from visitor'
+`ckanext.contact.add_timestamp_to_subject`|Whether to append a timestamp to the subject line|`false`
 
 ## Recaptcha
 

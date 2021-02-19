@@ -3,16 +3,16 @@
 #
 # This file is part of ckanext-contact
 # Created by the Natural History Museum in London, UK
-
 import logging
 import socket
-
 from ckan import logic
+from ckan.common import asbool
 from ckan.lib import mailer
 from ckan.lib.navl.dictization_functions import unflatten
 from ckan.plugins import PluginImplementations, toolkit
 from ckanext.contact import recaptcha
 from ckanext.contact.interfaces import IContact
+from datetime import datetime, timezone
 
 log = logging.getLogger(__name__)
 
@@ -49,6 +49,21 @@ def validate(data_dict):
     return errors, error_summary, recaptcha_error
 
 
+def build_subject(subject_default='Contact/Question from visitor', timestamp_default=False):
+    '''
+    Creates the subject line for the contact email using the config or the defaults.
+
+    :param subject_default: the default str to use if ckanext.contact.subject isn't specified
+    :param timestamp_default: the default bool to use if add_timestamp_to_subject isn't specified
+    :return: the subject line
+    '''
+    subject = toolkit.config.get('ckanext.contact.subject', toolkit._(subject_default))
+    if asbool(toolkit.config.get('ckanext.contact.add_timestamp_to_subject', timestamp_default)):
+        timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z')
+        subject = f'{subject} [{timestamp}]'
+    return subject
+
+
 def submit():
     '''
     Take the data in the request params and send an email using them. If the data is invalid or
@@ -75,16 +90,15 @@ def submit():
                f'Email: {data_dict["email"]}\n'
         mail_dict = {
             'recipient_email': toolkit.config.get('ckanext.contact.mail_to',
-                                                   toolkit.config.get('email_to')),
+                                                  toolkit.config.get('email_to')),
             'recipient_name': toolkit.config.get('ckanext.contact.recipient_name',
-                                                  toolkit.config.get('ckan.site_title')),
-            'subject': toolkit.config.get('ckanext.contact.subject',
-                                           toolkit._('Contact/Question from visitor')),
+                                                 toolkit.config.get('ckan.site_title')),
+            'subject': build_subject(),
             'body': body,
             'headers': {
                 'reply-to': data_dict['email']
-                }
             }
+        }
 
         # allow other plugins to modify the mail_dict
         for plugin in PluginImplementations(IContact):
