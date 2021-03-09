@@ -12,3 +12,6 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+.idea
+.coverage
+.pytest_cache

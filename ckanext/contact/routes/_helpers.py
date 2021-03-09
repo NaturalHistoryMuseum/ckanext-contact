@@ -3,17 +3,16 @@
 #
 # This file is part of ckanext-contact
 # Created by the Natural History Museum in London, UK
-
 import logging
 import socket
-
-from ckanext.contact import recaptcha
-from ckanext.contact.interfaces import IContact
-
 from ckan import logic
+from ckan.common import asbool
 from ckan.lib import mailer
 from ckan.lib.navl.dictization_functions import unflatten
 from ckan.plugins import PluginImplementations, toolkit
+from ckanext.contact import recaptcha
+from ckanext.contact.interfaces import IContact
+from datetime import datetime, timezone
 
 log = logging.getLogger(__name__)
 
@@ -31,24 +30,38 @@ def validate(data_dict):
     recaptcha_error = None
 
     # check the three fields we know about
-    for field in (u'email', u'name', u'content'):
+    for field in ('email', 'name', 'content'):
         value = data_dict.get(field, None)
-        if value is None or value == u'':
-            errors[field] = [u'Missing Value']
-            error_summary[field] = u'Missing value'
+        if value is None or value == '':
+            errors[field] = ['Missing Value']
+            error_summary[field] = 'Missing value'
 
     # only check the recaptcha if there are no errors
     if not errors:
         try:
-            expected_action = toolkit.config.get(u'ckanext.contact.recaptcha_v3_action')
+            expected_action = toolkit.config.get('ckanext.contact.recaptcha_v3_action')
             # check the recaptcha value, this only does anything if recaptcha is setup
-            recaptcha.check_recaptcha(data_dict.get(u'g-recaptcha-response', None),
-                                      expected_action)
+            recaptcha.check_recaptcha(data_dict.get('g-recaptcha-response', None), expected_action)
         except recaptcha.RecaptchaError as e:
-            log.info(u'Recaptcha failed due to "{}"'.format(e))
-            recaptcha_error = toolkit._(u'Recaptcha check failed, please try again.')
+            log.info(f'Recaptcha failed due to "{e}"')
+            recaptcha_error = toolkit._('Recaptcha check failed, please try again.')
 
     return errors, error_summary, recaptcha_error
+
+
+def build_subject(subject_default='Contact/Question from visitor', timestamp_default=False):
+    '''
+    Creates the subject line for the contact email using the config or the defaults.
+
+    :param subject_default: the default str to use if ckanext.contact.subject isn't specified
+    :param timestamp_default: the default bool to use if add_timestamp_to_subject isn't specified
+    :return: the subject line
+    '''
+    subject = toolkit.config.get('ckanext.contact.subject', toolkit._(subject_default))
+    if asbool(toolkit.config.get('ckanext.contact.add_timestamp_to_subject', timestamp_default)):
+        timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z')
+        subject = f'{subject} [{timestamp}]'
+    return subject
 
 
 def submit():
@@ -63,29 +76,31 @@ def submit():
 
     # pull out the data from the request
     data_dict = logic.clean_dict(
-        unflatten(logic.tuplize_dict(logic.parse_params(
-            toolkit.request.values))))
+        unflatten(logic.tuplize_dict(logic.parse_params(toolkit.request.values)))
+    )
 
     # validate the request params
     errors, error_summary, recaptcha_error = validate(data_dict)
 
     # if there are not errors and no recaptcha error, attempt to send the email
     if len(errors) == 0 and recaptcha_error is None:
-        body = u'{}\n\nSent by:\nName: {}\nEmail: {}\n'.format(data_dict[u'content'],
-                                                               data_dict[u'name'],
-                                                               data_dict[u'email'])
+        body_parts = [
+            f'{data_dict["content"]}\n',
+            'Sent by:',
+            f'  Name: {data_dict["name"]}',
+            f'  Email: {data_dict["email"]}'
+        ]
         mail_dict = {
-            u'recipient_email': toolkit.config.get(u'ckanext.contact.mail_to',
-                                                   toolkit.config.get(u'email_to')),
-            u'recipient_name': toolkit.config.get(u'ckanext.contact.recipient_name',
-                                                  toolkit.config.get(u'ckan.site_title')),
-            u'subject': toolkit.config.get(u'ckanext.contact.subject',
-                                           toolkit._(u'Contact/Question from visitor')),
-            u'body': body,
-            u'headers': {
-                u'reply-to': data_dict[u'email']
-                }
+            'recipient_email': toolkit.config.get('ckanext.contact.mail_to',
+                                                  toolkit.config.get('email_to')),
+            'recipient_name': toolkit.config.get('ckanext.contact.recipient_name',
+                                                 toolkit.config.get('ckan.site_title')),
+            'subject': build_subject(),
+            'body': '\n'.join(body_parts),
+            'headers': {
+                'reply-to': data_dict['email']
             }
+        }
 
         # allow other plugins to modify the mail_dict
         for plugin in PluginImplementations(IContact):
@@ -97,9 +112,9 @@ def submit():
             email_success = False
 
     return {
-        u'success': recaptcha_error is None and len(errors) == 0 and email_success,
-        u'data': data_dict,
-        u'errors': errors,
-        u'error_summary': error_summary,
-        u'recaptcha_error': recaptcha_error,
-        }
+        'success': recaptcha_error is None and len(errors) == 0 and email_success,
+        'data': data_dict,
+        'errors': errors,
+        'error_summary': error_summary,
+        'recaptcha_error': recaptcha_error,
+    }

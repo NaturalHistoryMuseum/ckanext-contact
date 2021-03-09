@@ -14,26 +14,26 @@ def check_recaptcha(token, expected_action):
     :param token: the token as returned in the frontend by a call to execute
     :param expected_action: the expected action associated with the token
     '''
-    key = toolkit.config.get(u'ckanext.contact.recaptcha_v3_key', False)
-    secret = toolkit.config.get(u'ckanext.contact.recaptcha_v3_secret', False)
+    key = toolkit.config.get('ckanext.contact.recaptcha_v3_key', False)
+    secret = toolkit.config.get('ckanext.contact.recaptcha_v3_secret', False)
 
     if not key or not secret:
         # recaptcha not enabled
         return
 
     post_params = {
-        u'secret': secret,
-        u'response': token,
+        'secret': secret,
+        'response': token,
     }
-    client_ip_address = toolkit.request.environ.get(u'REMOTE_ADDR', None)
+    client_ip_address = toolkit.request.environ.get('REMOTE_ADDR', None)
     if client_ip_address:
-        post_params[u'remoteip'] = client_ip_address
+        post_params['remoteip'] = client_ip_address
 
-    response = requests.post(u'https://www.google.com/recaptcha/api/siteverify', params=post_params)
+    response = requests.post('https://www.google.com/recaptcha/api/siteverify', params=post_params)
     response.raise_for_status()
     result = response.json()
 
-    if not result[u'success']:
-        raise RecaptchaError(u', '.join(result[u'error-codes']))
-    if expected_action != result[u'action']:
-        raise RecaptchaError(toolkit._(u'Action mismatch'))
+    if not result['success']:
+        raise RecaptchaError(', '.join(result['error-codes']))
+    if expected_action != result['action']:
+        raise RecaptchaError(toolkit._('Action mismatch'))

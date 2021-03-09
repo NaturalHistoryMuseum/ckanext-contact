@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 #
 # This file is part of ckanext-contact
@@ -24,14 +24,8 @@ class ContactPlugin(SingletonPlugin):
 
     ## IConfigurer
     def update_config(self, config):
-        '''
-
-        :param config:
-
-        '''
-        toolkit.add_template_directory(config, u'theme/templates')
-        toolkit.add_public_directory(config, u'theme/public')
-        toolkit.add_resource(u'theme/public', u'ckanext-contact')
+        toolkit.add_template_directory(config, 'theme/templates')
+        toolkit.add_resource('theme/assets', 'ckanext-contact')
 
     ## IBlueprint
     def get_blueprint(self):
@@ -41,15 +35,15 @@ class ContactPlugin(SingletonPlugin):
     def get_auth_functions(self):
         ''' '''
         return {
-            u'send_contact': send_contact
-            }
+            'send_contact': send_contact
+        }
 
     ## ITemplateHelpers
     def get_helpers(self):
         ''' '''
         return {
-            u'get_recaptcha_v3_action':
-                functools.partial(toolkit.config.get, u'ckanext.contact.recaptcha_v3_action', None),
-            u'get_recaptcha_v3_key':
-                functools.partial(toolkit.config.get, u'ckanext.contact.recaptcha_v3_key', None)
-            }
+            'get_recaptcha_v3_action':
+                functools.partial(toolkit.config.get, 'ckanext.contact.recaptcha_v3_action', None),
+            'get_recaptcha_v3_key':
+                functools.partial(toolkit.config.get, 'ckanext.contact.recaptcha_v3_key', None)
+        }
