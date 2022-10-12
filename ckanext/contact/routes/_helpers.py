@@ -29,9 +29,11 @@ def validate(data_dict):
     error_summary = {}
     recaptcha_error = None
 
-    # check the three fields we know about
-    for field in ('email', 'name', 'content'):
-        value = data_dict.get(field, None)
+    # check each field to see if it has a value and if not, show and error
+    for field, value in data_dict.items():
+        # we know the save field is not necessary and may be empty so ignore it
+        if field == 'save':
+            continue
         if value is None or value == '':
             errors[field] = ['Missing Value']
             error_summary[field] = 'Missing value'
