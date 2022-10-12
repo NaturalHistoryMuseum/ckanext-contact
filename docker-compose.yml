@@ -17,6 +17,8 @@ services:
 
   solr:
     image: ckan/ckan-solr:2.9
+    logging:
+      driver: none
 
   db:
     build:
