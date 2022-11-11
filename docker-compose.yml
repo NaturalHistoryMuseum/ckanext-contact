@@ -13,7 +13,8 @@ services:
       - solr
       - redis
     volumes:
-      - .:/base/src/ckanext-contact
+      - ./ckanext:/base/src/ckanext-contact/ckanext
+      - ./tests:/base/src/ckanext-contact/tests
 
   solr:
     image: ckan/ckan-solr:2.9

@@ -2,10 +2,11 @@
 
 # ckanext-contact
 
-[![Tests](https://github.com/NaturalHistoryMuseum/ckanext-contact/actions/workflows/main.yml/badge.svg)](https://github.com/NaturalHistoryMuseum/ckanext-contact/actions/workflows/main.yml)
-[![Coveralls](https://img.shields.io/coveralls/github/NaturalHistoryMuseum/ckanext-contact/master.svg?style=flat-square)](https://coveralls.io/github/NaturalHistoryMuseum/ckanext-contact)
+[![Tests](https://img.shields.io/github/workflow/status/NaturalHistoryMuseum/ckanext-contact/Tests?style=flat-square)](https://github.com/NaturalHistoryMuseum/ckanext-contact/actions/workflows/main.yml)
+[![Coveralls](https://img.shields.io/coveralls/github/NaturalHistoryMuseum/ckanext-contact/main?style=flat-square)](https://coveralls.io/github/NaturalHistoryMuseum/ckanext-contact)
 [![CKAN](https://img.shields.io/badge/ckan-2.9.1-orange.svg?style=flat-square)](https://github.com/ckan/ckan)
 [![Python](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue.svg?style=flat-square)](https://www.python.org/)
+[![Docs](https://img.shields.io/readthedocs/ckanext-contact?style=flat-square)](https://ckanext-contact.readthedocs.io)
 
 _A CKAN extension for adding popup contact forms to pages._
 
@@ -61,7 +62,7 @@ Path variables used below:
 
 # Configuration
 
-There are no settings that _must_ be provided in your .ini config file, but there are some options:
+These are the options that can be specified in your .ini config file.
 
 ## Email
 
@@ -103,10 +104,8 @@ Where `params` is a dict with three entries: package_id, resource_id, record_id 
 
 
 # Testing
-_Test coverage is currently extremely limited._
 
-To run the tests in this extension, there is a Docker compose configuration available in this
-repository to make it easy.
+There is a Docker compose configuration available in this repository to make it easier to run tests.
 
 To run the tests against ckan 2.9.x on Python3:
 
@@ -123,4 +122,4 @@ docker-compose build
 docker-compose run ckan
 ```
 
-The ckan image uses the Dockerfile in the `docker/` folder which is based on `openknowledge/ckan-dev:2.9`
+The ckan image uses the Dockerfile in the `docker/` folder.
