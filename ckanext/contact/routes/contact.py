@@ -17,21 +17,18 @@ blueprint = Blueprint(name='contact', import_name=__name__, url_prefix='/contact
 
 
 def _context():
-    return {
-        'user': toolkit.c.user or toolkit.c.author
-    }
+    return {'user': toolkit.c.user or toolkit.c.author}
 
 
 @blueprint.before_request
 def before_request():
-    '''
-    This function runs before the request handler to setup a few things. We use it to set
-    the
-    context dict and the user has check access.
+    """
+    This function runs before the request handler to setup a few things. We use it to
+    set the context dict and the user has check access.
 
     :param action: the action the user is attempting to perform (i.e. the handler)
     :param env: the environment object
-    '''
+    """
 
     try:
         toolkit.check_access('send_contact', _context())
@@ -41,12 +38,12 @@ def before_request():
 
 @blueprint.route('', methods=['GET', 'POST'])
 def form():
-    '''
-    Form based interaction, if called as a POST request the request params are used to send the
-    email, if not then the form template is rendered.
+    """
+    Form based interaction, if called as a POST request the request params are used to
+    send the email, if not then the form template is rendered.
 
     :return: a page, either the form page or the success page if the email was sent successfully
-    '''
+    """
     # dict of context values for the template renderer
     extra_vars = {
         'data': {},
@@ -68,7 +65,9 @@ def form():
     else:
         # try and use logged in user values for default values
         try:
-            extra_vars['data']['name'] = toolkit.c.userobj.fullname or toolkit.c.userobj.name
+            extra_vars['data']['name'] = (
+                toolkit.c.userobj.fullname or toolkit.c.userobj.name
+            )
             extra_vars['data']['email'] = toolkit.c.userobj.email
         except AttributeError:
             extra_vars['data']['name'] = extra_vars['data']['email'] = None
@@ -78,9 +77,9 @@ def form():
 
 @blueprint.route('/ajax', methods=['POST'])
 def ajax_submit():
-    '''
+    """
     AJAX form submission.
 
     :return: json dumped data for the response
-    '''
+    """
     return jsonify(_helpers.submit())

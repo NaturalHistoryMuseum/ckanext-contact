@@ -6,7 +6,6 @@ from freezegun import freeze_time
 
 
 class TestBuildSubject:
-
     def test_no_config_all_defaults(self):
         subject = build_subject()
         assert subject == 'Contact/Question from visitor'
@@ -29,7 +28,9 @@ class TestBuildSubject:
 
         subject = build_subject(timestamp_default=timestamp_default)
 
-        timestamp = datetime(2021, 1, 1, tzinfo=timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z')
+        timestamp = datetime(2021, 1, 1, tzinfo=timezone.utc).strftime(
+            '%Y-%m-%d %H:%M:%S %Z'
+        )
         assert subject == f'Contact/Question from visitor [{timestamp}]'
 
     @freeze_time("2021-01-01")
@@ -39,7 +40,9 @@ class TestBuildSubject:
 
         subject = build_subject(subject_default, timestamp_default)
 
-        timestamp = datetime(2021, 1, 1, tzinfo=timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z')
+        timestamp = datetime(2021, 1, 1, tzinfo=timezone.utc).strftime(
+            '%Y-%m-%d %H:%M:%S %Z'
+        )
         assert subject == f'{subject_default} [{timestamp}]'
 
     @freeze_time("2021-01-01")
@@ -48,7 +51,9 @@ class TestBuildSubject:
     def test_config_with_timestamp(self):
         subject = build_subject()
 
-        timestamp = datetime(2021, 1, 1, tzinfo=timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z')
+        timestamp = datetime(2021, 1, 1, tzinfo=timezone.utc).strftime(
+            '%Y-%m-%d %H:%M:%S %Z'
+        )
         assert subject == f'TEST SUBJECT [{timestamp}]'
 
     @pytest.mark.ckan_config('ckanext.contact.subject', 'TEST SUBJECT')

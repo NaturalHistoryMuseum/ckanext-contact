@@ -16,7 +16,10 @@ log = getLogger(__name__)
 
 
 class ContactPlugin(SingletonPlugin):
-    '''CKAN Contact Extension'''
+    """
+    CKAN Contact Extension.
+    """
+
     implements(interfaces.IBlueprint, inherit=True)
     implements(interfaces.IConfigurer)
     implements(interfaces.IAuthFunctions)
@@ -33,17 +36,15 @@ class ContactPlugin(SingletonPlugin):
 
     ## IAuthFunctions
     def get_auth_functions(self):
-        ''' '''
-        return {
-            'send_contact': send_contact
-        }
+        return {'send_contact': send_contact}
 
     ## ITemplateHelpers
     def get_helpers(self):
-        ''' '''
         return {
-            'get_recaptcha_v3_action':
-                functools.partial(toolkit.config.get, 'ckanext.contact.recaptcha_v3_action', None),
-            'get_recaptcha_v3_key':
-                functools.partial(toolkit.config.get, 'ckanext.contact.recaptcha_v3_key', None)
+            'get_recaptcha_v3_action': functools.partial(
+                toolkit.config.get, 'ckanext.contact.recaptcha_v3_action', None
+            ),
+            'get_recaptcha_v3_key': functools.partial(
+                toolkit.config.get, 'ckanext.contact.recaptcha_v3_key', None
+            ),
         }
