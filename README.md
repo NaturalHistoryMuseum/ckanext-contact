@@ -1,3 +1,4 @@
+<!--header-start-->
 <img src=".github/nhm-logo.svg" align="left" width="150px" height="100px" hspace="40"/>
 
 # ckanext-contact
@@ -10,18 +11,22 @@
 
 _A CKAN extension for adding popup contact forms to pages._
 
+<!--header-end-->
 
 # Overview
 
+<!--overview-start-->
 Borrows much of the contact form code from [ckanext-surrey](https://github.com/CityofSurrey/ckanext-surrey).
 
 An example can be seen on the Natural History Museum's [Data Portal](https://data.nhm.ac.uk) when clicking "_Contact dataset curator._"
 
 This extension now includes Google's [reCAPTCHA](https://www.google.com/recaptcha) for preventing spam submissions.
 
+<!--overview-end-->
 
 # Installation
 
+<!--installation-start-->
 Path variables used below:
 - `$INSTALL_FOLDER` (i.e. where CKAN is installed), e.g. `/usr/lib/ckan/default`
 - `$CONFIG_FILE`, e.g. `/etc/ckan/default/development.ini`
@@ -59,9 +64,13 @@ Path variables used below:
   ckan.plugins = ... contact
   ```
 
+6. To use reCAPTCHA, you must register a site with the Google [reCAPTCHA](https://www.google.com/recaptcha) service and add your API key and secret in the [configuration](#configuration).
+
+<!--installation-end-->
 
 # Configuration
 
+<!--configuration-start-->
 These are the options that can be specified in your .ini config file.
 
 ## Email
@@ -81,13 +90,11 @@ Name|Description|Default
 `ckanext.contact.recaptcha_v3_secret`|API secret for the reCAPTCHA service.|False (i.e. disabled)
 `ckanext.contact.recaptcha_v3_action`|`data-module-action` for the form/button|
 
-
-# Further Setup
-
-To use reCAPTCHA, you must register a site with the Google [reCAPTCHA](https://www.google.com/recaptcha) service and add your API key and secret in the [configuration](#configuration).
+<!--configuration-end-->
 
 # Usage
 
+<!--usage-start-->
 Add the following HTML where you want the contact button to appear:
 
 ```html+jinja
@@ -102,9 +109,11 @@ Add the following HTML where you want the contact button to appear:
 
 Where `params` is a dict with three entries: package_id, resource_id, record_id (all of which are optional).
 
+<!--usage-end-->
 
 # Testing
 
+<!--testing-start-->
 There is a Docker compose configuration available in this repository to make it easier to run tests.
 
 To run the tests against ckan 2.9.x on Python3:
@@ -123,3 +132,5 @@ docker-compose run ckan
 ```
 
 The ckan image uses the Dockerfile in the `docker/` folder.
+
+<!--testing-end-->
