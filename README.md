@@ -1,26 +1,32 @@
+<!--header-start-->
 <img src=".github/nhm-logo.svg" align="left" width="150px" height="100px" hspace="40"/>
 
 # ckanext-contact
 
-[![Tests](https://github.com/NaturalHistoryMuseum/ckanext-contact/actions/workflows/main.yml/badge.svg)](https://github.com/NaturalHistoryMuseum/ckanext-contact/actions/workflows/main.yml)
-[![Coveralls](https://img.shields.io/coveralls/github/NaturalHistoryMuseum/ckanext-contact/master.svg?style=flat-square)](https://coveralls.io/github/NaturalHistoryMuseum/ckanext-contact)
+[![Tests](https://img.shields.io/github/workflow/status/NaturalHistoryMuseum/ckanext-contact/Tests?style=flat-square)](https://github.com/NaturalHistoryMuseum/ckanext-contact/actions/workflows/main.yml)
+[![Coveralls](https://img.shields.io/coveralls/github/NaturalHistoryMuseum/ckanext-contact/main?style=flat-square)](https://coveralls.io/github/NaturalHistoryMuseum/ckanext-contact)
 [![CKAN](https://img.shields.io/badge/ckan-2.9.1-orange.svg?style=flat-square)](https://github.com/ckan/ckan)
 [![Python](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue.svg?style=flat-square)](https://www.python.org/)
+[![Docs](https://img.shields.io/readthedocs/ckanext-contact?style=flat-square)](https://ckanext-contact.readthedocs.io)
 
 _A CKAN extension for adding popup contact forms to pages._
 
+<!--header-end-->
 
 # Overview
 
+<!--overview-start-->
 Borrows much of the contact form code from [ckanext-surrey](https://github.com/CityofSurrey/ckanext-surrey).
 
 An example can be seen on the Natural History Museum's [Data Portal](https://data.nhm.ac.uk) when clicking "_Contact dataset curator._"
 
 This extension now includes Google's [reCAPTCHA](https://www.google.com/recaptcha) for preventing spam submissions.
 
+<!--overview-end-->
 
 # Installation
 
+<!--installation-start-->
 Path variables used below:
 - `$INSTALL_FOLDER` (i.e. where CKAN is installed), e.g. `/usr/lib/ckan/default`
 - `$CONFIG_FILE`, e.g. `/etc/ckan/default/development.ini`
@@ -58,10 +64,14 @@ Path variables used below:
   ckan.plugins = ... contact
   ```
 
+6. To use reCAPTCHA, you must register a site with the Google [reCAPTCHA](https://www.google.com/recaptcha) service and add your API key and secret in the [configuration](#configuration).
+
+<!--installation-end-->
 
 # Configuration
 
-There are no settings that _must_ be provided in your .ini config file, but there are some options:
+<!--configuration-start-->
+These are the options that can be specified in your .ini config file.
 
 ## Email
 
@@ -80,13 +90,11 @@ Name|Description|Default
 `ckanext.contact.recaptcha_v3_secret`|API secret for the reCAPTCHA service.|False (i.e. disabled)
 `ckanext.contact.recaptcha_v3_action`|`data-module-action` for the form/button|
 
-
-# Further Setup
-
-To use reCAPTCHA, you must register a site with the Google [reCAPTCHA](https://www.google.com/recaptcha) service and add your API key and secret in the [configuration](#configuration).
+<!--configuration-end-->
 
 # Usage
 
+<!--usage-start-->
 Add the following HTML where you want the contact button to appear:
 
 ```html+jinja
@@ -101,12 +109,12 @@ Add the following HTML where you want the contact button to appear:
 
 Where `params` is a dict with three entries: package_id, resource_id, record_id (all of which are optional).
 
+<!--usage-end-->
 
 # Testing
-_Test coverage is currently extremely limited._
 
-To run the tests in this extension, there is a Docker compose configuration available in this
-repository to make it easy.
+<!--testing-start-->
+There is a Docker compose configuration available in this repository to make it easier to run tests.
 
 To run the tests against ckan 2.9.x on Python3:
 
@@ -123,4 +131,6 @@ docker-compose build
 docker-compose run ckan
 ```
 
-The ckan image uses the Dockerfile in the `docker/` folder which is based on `openknowledge/ckan-dev:2.9`
+The ckan image uses the Dockerfile in the `docker/` folder.
+
+<!--testing-end-->

@@ -7,13 +7,13 @@ class RecaptchaError(ValueError):
 
 
 def check_recaptcha(token, expected_action):
-    '''
-    Check a user's recaptcha token is valid, and raise RecaptchaError if it's not. If the token is
-    valid then this function has no side effects.
+    """
+    Check a user's recaptcha token is valid, and raise RecaptchaError if it's not. If
+    the token is valid then this function has no side effects.
 
     :param token: the token as returned in the frontend by a call to execute
     :param expected_action: the expected action associated with the token
-    '''
+    """
     key = toolkit.config.get('ckanext.contact.recaptcha_v3_key', False)
     secret = toolkit.config.get('ckanext.contact.recaptcha_v3_secret', False)
 
@@ -29,7 +29,9 @@ def check_recaptcha(token, expected_action):
     if client_ip_address:
         post_params['remoteip'] = client_ip_address
 
-    response = requests.post('https://www.google.com/recaptcha/api/siteverify', params=post_params)
+    response = requests.post(
+        'https://www.google.com/recaptcha/api/siteverify', params=post_params
+    )
     response.raise_for_status()
     result = response.json()
 
