@@ -77,20 +77,20 @@ These are the options that can be specified in your .ini config file.
 
 ## Email
 
-Name|Description|Default
---|--|--
-`ckanext.contact.mail_to`|Email address to submit to|`email_to`
-`ckanext.contact.recipient_name`|Name of the recipient|`ckan.site_title`
-`ckanext.contact.subject`|Email subject for the submitted form|'Contact/Question from visitor'
-`ckanext.contact.add_timestamp_to_subject`|Whether to append a timestamp to the subject line|`false`
+| Name                                       | Description                                       | Default                         |
+|--------------------------------------------|---------------------------------------------------|---------------------------------|
+| `ckanext.contact.mail_to`                  | Email address to submit to                        | `email_to`                      |
+| `ckanext.contact.recipient_name`           | Name of the recipient                             | `ckan.site_title`               |
+| `ckanext.contact.subject`                  | Email subject for the submitted form              | 'Contact/Question from visitor' |
+| `ckanext.contact.add_timestamp_to_subject` | Whether to append a timestamp to the subject line | `false`                         |
 
 ## Recaptcha
 
-Name|Description|Default
---|--|--
-`ckanext.contact.recaptcha_v3_key`|API key for the reCAPTCHA service.|False (i.e. disabled)
-`ckanext.contact.recaptcha_v3_secret`|API secret for the reCAPTCHA service.|False (i.e. disabled)
-`ckanext.contact.recaptcha_v3_action`|`data-module-action` for the form/button|
+| Name                                  | Description                              | Default               |
+|---------------------------------------|------------------------------------------|-----------------------|
+| `ckanext.contact.recaptcha_v3_key`    | API key for the reCAPTCHA service.       | False (i.e. disabled) |
+| `ckanext.contact.recaptcha_v3_secret` | API secret for the reCAPTCHA service.    | False (i.e. disabled) |
+| `ckanext.contact.recaptcha_v3_action` | `data-module-action` for the form/button |                       |
 
 <!--configuration-end-->
 
