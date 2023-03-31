@@ -48,7 +48,9 @@ class TestBuildSubject:
         subject_default = 'TEST SUBJECT'
         timestamp_default = True
 
-        subject = build_subject(subject_default, timestamp_default)
+        subject = build_subject(
+            default=subject_default, timestamp_default=timestamp_default
+        )
 
         timestamp = datetime(2021, 1, 1, tzinfo=timezone.utc).strftime(
             '%Y-%m-%d %H:%M:%S %Z'
