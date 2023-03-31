@@ -11,10 +11,20 @@ class TestBuildSubject:
         assert subject == 'Contact/Question from visitor'
 
     def test_no_config_pass_default_subject(self):
-        subject_default = 'TEST SUBJECT'
+        default = 'TEST SUBJECT'
 
-        subject = build_subject(subject_default=subject_default)
-        assert subject == subject_default
+        subject = build_subject(default=default)
+        assert subject == default
+
+    def test_user_specified(self):
+        subject = 'YES PLEASE EMAIL'
+        assert build_subject(subject=subject) == subject
+
+    @pytest.mark.ckan_config('ckanext.contact.subject', 'TEST SUBJECT')
+    def test_user_specified_and_defaults(self):
+        subject = 'YES PLEASE EMAIL'
+
+        assert build_subject(subject=subject) == subject
 
     def test_no_config_pass_default_timestamp_false(self):
         timestamp_default = False
