@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.0 (2023-04-03)
+
+### Feature
+
+- allow contact emails to be sent to multiple recipients
+
 ## v2.1.6 (2023-02-20)
 
 ### Docs
