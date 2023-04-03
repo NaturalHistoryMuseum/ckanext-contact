@@ -116,10 +116,20 @@ def submit():
         for plugin in PluginImplementations(IContact):
             plugin.mail_alter(mail_dict, data_dict)
 
-        try:
-            mailer.mail_recipient(**mail_dict)
-        except (mailer.MailerException, socket.error):
-            email_success = False
+        # note the pop here so that we don't get parameter clashes when we call
+        # mail_recipient below
+        emails = mail_dict.pop('recipient_email')
+        names = mail_dict.pop('recipient_name')
+        if isinstance(emails, str):
+            emails = [emails]
+            names = [names]
+
+        # send the email to each name/email pair
+        for name, email in zip(names, emails):
+            try:
+                mailer.mail_recipient(name, email, **mail_dict)
+            except (mailer.MailerException, socket.error):
+                email_success = False
 
     return {
         'success': recaptcha_error is None and len(errors) == 0 and email_success,
