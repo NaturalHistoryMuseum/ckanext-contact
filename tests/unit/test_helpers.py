@@ -73,3 +73,12 @@ class TestBuildSubject:
     def test_config_with_timestamp(self):
         subject = build_subject()
         assert subject == 'TEST SUBJECT'
+
+    def test_prefix_not_provided(self):
+        subject = build_subject(subject='TEST')
+        assert subject == 'TEST'
+
+    @pytest.mark.ckan_config('ckanext.contact.subject_prefix', 'PREFIX: ')
+    def test_prefix_provided(self):
+        subject = build_subject(subject='TEST')
+        assert subject == 'PREFIX: TEST'
