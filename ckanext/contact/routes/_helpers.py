@@ -83,7 +83,7 @@ def build_subject(
 
     prefix = toolkit.config.get('ckanext.contact.subject_prefix', '')
 
-    return f'{prefix}{subject}'
+    return f'{prefix}{" " if prefix else ""}{subject}'
 
 
 def submit():
