@@ -78,7 +78,7 @@ class TestBuildSubject:
         subject = build_subject(subject='TEST')
         assert subject == 'TEST'
 
-    @pytest.mark.ckan_config('ckanext.contact.subject_prefix', 'PREFIX: ')
+    @pytest.mark.ckan_config('ckanext.contact.subject_prefix', 'PREFIX:')
     def test_prefix_provided(self):
         subject = build_subject(subject='TEST')
         assert subject == 'PREFIX: TEST'
