@@ -83,6 +83,7 @@ These are the options that can be specified in your .ini config file.
 | `ckanext.contact.recipient_name`           | Name of the recipient                             | `ckan.site_title`               |
 | `ckanext.contact.subject`                  | Email subject for the submitted form              | 'Contact/Question from visitor' |
 | `ckanext.contact.add_timestamp_to_subject` | Whether to append a timestamp to the subject line | `false`                         |
+| `ckanext.contact.subject_prefix`           | A prefix to add to the subject before sending     | ''                              |
 
 ## Recaptcha
 

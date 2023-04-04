@@ -80,7 +80,10 @@ def build_subject(
     ):
         timestamp = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S %Z')
         subject = f'{subject} [{timestamp}]'
-    return subject
+
+    prefix = toolkit.config.get('ckanext.contact.subject_prefix', '')
+
+    return f'{prefix}{subject}'
 
 
 def submit():
