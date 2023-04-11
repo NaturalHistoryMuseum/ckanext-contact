@@ -11,10 +11,20 @@ class TestBuildSubject:
         assert subject == 'Contact/Question from visitor'
 
     def test_no_config_pass_default_subject(self):
-        subject_default = 'TEST SUBJECT'
+        default = 'TEST SUBJECT'
 
-        subject = build_subject(subject_default=subject_default)
-        assert subject == subject_default
+        subject = build_subject(default=default)
+        assert subject == default
+
+    def test_user_specified(self):
+        subject = 'YES PLEASE EMAIL'
+        assert build_subject(subject=subject) == subject
+
+    @pytest.mark.ckan_config('ckanext.contact.subject', 'TEST SUBJECT')
+    def test_user_specified_and_defaults(self):
+        subject = 'YES PLEASE EMAIL'
+
+        assert build_subject(subject=subject) == subject
 
     def test_no_config_pass_default_timestamp_false(self):
         timestamp_default = False
@@ -38,7 +48,9 @@ class TestBuildSubject:
         subject_default = 'TEST SUBJECT'
         timestamp_default = True
 
-        subject = build_subject(subject_default, timestamp_default)
+        subject = build_subject(
+            default=subject_default, timestamp_default=timestamp_default
+        )
 
         timestamp = datetime(2021, 1, 1, tzinfo=timezone.utc).strftime(
             '%Y-%m-%d %H:%M:%S %Z'
@@ -61,3 +73,12 @@ class TestBuildSubject:
     def test_config_with_timestamp(self):
         subject = build_subject()
         assert subject == 'TEST SUBJECT'
+
+    def test_prefix_not_provided(self):
+        subject = build_subject(subject='TEST')
+        assert subject == 'TEST'
+
+    @pytest.mark.ckan_config('ckanext.contact.subject_prefix', 'PREFIX:')
+    def test_prefix_provided(self):
+        subject = build_subject(subject='TEST')
+        assert subject == 'PREFIX: TEST'
