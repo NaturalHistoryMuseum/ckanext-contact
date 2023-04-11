@@ -1,5 +1,37 @@
 # Changelog
 
+## v2.3.0 (2023-04-11)
+
+### Feature
+
+- add a prefix to email subject when it's provided in the config
+- allow users to specify a subject line in their contact emails
+
+### Fix
+
+- expect no trailing space in the prefix from config
+
+### Refactor
+
+- move tests into unit subdir
+
+### Docs
+
+- add the new prefix option to the docs
+
+### Tests
+
+- fix a test
+- add additional tests for the ne subject changes
+
+### Build System(s)
+
+- fix postgres not loading when running tests in docker
+
+### Chores/Misc
+
+- add action to sync branches when commits are pushed to main
+
 ## v2.2.0 (2023-04-03)
 
 ### Feature
