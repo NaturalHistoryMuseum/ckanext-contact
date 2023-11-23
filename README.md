@@ -107,7 +107,7 @@ Add the following HTML where you want the contact button to appear:
     <i class="fas fa-envelope"></i>{{ link_text if link_text else _('CONTACT BUTTON TEXT') }}
 </a>
 
-{% resource 'ckanext-contact/main' %}
+{% asset 'ckanext-contact/main' %}
 ```
 
 Where `params` is a dict with three entries: package_id, resource_id, record_id (all of which are optional).
