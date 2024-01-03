@@ -93,6 +93,12 @@ These are the options that can be specified in your .ini config file.
 | `ckanext.contact.recaptcha_v3_secret` | API secret for the reCAPTCHA service.    | False (i.e. disabled) |
 | `ckanext.contact.recaptcha_v3_action` | `data-module-action` for the form/button |                       |
 
+## Other
+
+| Name                          | Description                                                                                          | Default             |
+|-------------------------------|------------------------------------------------------------------------------------------------------|---------------------|
+| `ckanext.contact.check_email` | Set to False to disable checking email addresses via [pyIsEmail](https://pypi.org/project/pyIsEmail) | True (i.e. enabled) |
+
 <!--configuration-end-->
 
 # Usage
