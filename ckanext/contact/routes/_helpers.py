@@ -13,6 +13,7 @@ from ckan.plugins import PluginImplementations, toolkit
 from ckanext.contact import recaptcha
 from ckanext.contact.interfaces import IContact
 from datetime import datetime, timezone
+from pyisemail import is_email
 
 log = logging.getLogger(__name__)
 
@@ -41,6 +42,15 @@ def validate(data_dict):
         if value is None or value == '':
             errors[field] = ['Missing Value']
             error_summary[field] = 'Missing value'
+
+    # check the email address, if there is one and the config option isn't off
+    if (
+        toolkit.asbool(toolkit.config.get('ckanext.contact.check_email', True))
+        and data_dict['email']
+    ):
+        if not is_email(data_dict['email'], check_dns=True):
+            errors['email'] = ['Email address appears to be invalid']
+            error_summary['email'] = 'Email address appears to be invalid'
 
     # only check the recaptcha if there are no errors
     if not errors:

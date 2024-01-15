@@ -19,7 +19,8 @@ classifiers = [
     "Programming Language :: Python :: 3.8"
 ]
 dependencies = [
-    "ckantools>=0.3.0"
+    "ckantools>=0.3.0",
+    "pyisemail==2.0.1"
 ]
 
 [project.optional-dependencies]

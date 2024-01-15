@@ -30,7 +30,7 @@
                               value=data.subject, error=errors.subject, classes=['control-medium'],
                               is_required=false, placeholder=_('Optional subject')) }}
 
-                {{ form.markdown('content', label=_('Your Request'), id='field-content',
+                {{ form.textarea('content', label=_('Your Request'), id='field-content',
                                  value=data.content, error=errors.content,
                                  placeholder=_('What do you have to tell us?'), is_required=true) }}
             {% endblock %}
