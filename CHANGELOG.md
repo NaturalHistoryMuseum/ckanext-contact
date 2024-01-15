@@ -1,5 +1,29 @@
 # Changelog
 
+## v2.4.0 (2024-01-15)
+
+### Feature
+
+- check provided email address with pyisemail
+
+### Fix
+
+- remove unnecessary markdown message in request field
+
+### Style
+
+- fix run-on sentence
+
+### Chores/Misc
+
+- add build section to read the docs config
+- add regex for version line in citation file
+- add citation.cff to list of files with version
+- add contributing guidelines
+- add code of conduct
+- add citation file
+- update support.md links
+
 ## v2.3.1 (2023-07-17)
 
 ### Docs
