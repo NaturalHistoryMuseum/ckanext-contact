@@ -14,7 +14,10 @@
             {% block contact_form_legend %}
                 <legend>
                     {% block contact_form_legend_content %}
-                        {{ _('Questions? Comments? We are always glad to hear from you!') }}
+                        <p>Do you have a question, comment, or data request?</p>
+                        <p>
+                            Niagara Open Data and our community partners look forward to hearing from you!
+                        </p>
                     {% endblock %}
                 </legend>
             {% endblock %}
@@ -41,7 +44,7 @@
                 {{ form.required_message() }}
 
                 <button class="btn btn-primary save" type="submit" name="save">
-                    {{ _('Submit') }}
+                    {{ _('Send Request') }}
                 </button>
             {% endblock %}
         </div>

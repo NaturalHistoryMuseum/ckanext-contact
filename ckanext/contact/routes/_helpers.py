@@ -7,12 +7,16 @@ import logging
 import socket
 from ckan import logic
 from ckan.common import asbool
-from ckan.lib import mailer
+# from ckan.lib import mailer
 from ckan.lib.navl.dictization_functions import unflatten
 from ckan.plugins import PluginImplementations, toolkit
 from ckanext.contact import recaptcha
 from ckanext.contact.interfaces import IContact
 from datetime import datetime, timezone
+
+from ckan.common import config
+
+import ckanext.ontario_theme.niagara_mailer as mailer
 
 log = logging.getLogger(__name__)
 
@@ -136,10 +140,12 @@ def submit():
             emails = [emails]
             names = [names]
 
+        mail_from = config.get('ckanext.contact.mail_from')
+        reply_to = config.get('ckanext.contact.reply_to')
         # send the email to each name/email pair
         for name, email in zip(names, emails):
             try:
-                mailer.mail_recipient(name, email, **mail_dict)
+                mailer.mail_recipient(mail_from, reply_to, name, email, **mail_dict)
             except (mailer.MailerException, socket.error):
                 email_success = False
 

@@ -7,11 +7,12 @@
     </li>
 {% endblock %}
 
-{% block secondary %}
-{% endblock %}
 
-{% block primary %}
-    <article class="module">
+
+{% block primary_content %}
+<div class="primary col-sm-9 col-xs-12" role="main">
+
+    <section class="module">
         <div class="module-content">
             <h1 class="page-heading">{{ _('Contact us') }}</h1>
 
@@ -20,5 +21,18 @@
             {% endblock %}
 
         </div>
-    </article>
+    </section>
+    </div>
+{% endblock %}
+{% block secondary %}
+<aside class="secondary col-sm-3 left-col">
+   
+    <div class="module module-narrow module-shallow">
+        <h2 class="module-heading"><i class="fa fa-info-circle"></i> {{ _('Your information and privacy') }}</h2>
+        <p>Your personal information is being collected for the purposes of responding to your contact submission.</p>
+        <p>The content of your submission and personal contact information will be shared with Niagara Open Data's member organizations and will be used to respond to your request.</p>  
+        <p>Non-identifiable information may be shared with our member organizations to measure performance and improve our services. Data request submissions are collected and provided back to our extended community for tracking purposed without any personal identifiable information.</p>
+        <p>Any information you share will be used only for the intended purpose for which it was provided. If you have any questions email us at info@niagaraopendata.ca.</p>
+</div>
+</aside>
 {% endblock %}
