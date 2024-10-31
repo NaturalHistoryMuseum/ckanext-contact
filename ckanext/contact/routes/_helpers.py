@@ -25,7 +25,7 @@ def validate(data_dict):
     Validates the given data and recaptcha if necessary.
 
     :param data_dict: the request params as a dict
-    :return: a 3-tuple of errors, error summaries and a recaptcha error, in the event
+    :returns: a 3-tuple of errors, error summaries and a recaptcha error, in the event
         where no issues occur the return is ({}, {}, None)
     """
     errors = {}
@@ -81,7 +81,7 @@ def build_subject(
         ckanext.contact.subject isn't specified
     :param timestamp_default: the default bool to use if add_timestamp_to_subject isn't
         specified
-    :return: the subject line
+    :returns: the subject line
     """
     if not subject:
         subject = toolkit.config.get('ckanext.contact.subject', toolkit._(default))
@@ -103,7 +103,7 @@ def submit():
     Take the data in the request params and send an email using them. If the data is
     invalid or a recaptcha is setup and it fails, don't send the email.
 
-    :return: a dict of details
+    :returns: a dict of details
     """
     # this variable holds the status of sending the email
     email_success = True
