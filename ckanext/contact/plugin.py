@@ -7,10 +7,10 @@
 import functools
 from logging import getLogger
 
-from ckanext.contact.auth import send_contact
-from ckanext.contact import routes
-
 from ckan.plugins import SingletonPlugin, implements, interfaces, toolkit
+
+from ckanext.contact import routes
+from ckanext.contact.auth import send_contact
 
 log = getLogger(__name__)
 
