@@ -1,8 +1,9 @@
 import pytest
 from ckan.plugins import toolkit
 from ckan.tests import factories
-from ckanext.contact.auth import send_contact
 from mock import MagicMock
+
+from ckanext.contact.auth import send_contact
 
 
 def test_auth_always_succeeds_direct():

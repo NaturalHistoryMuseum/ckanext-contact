@@ -42,7 +42,8 @@ def form():
     Form based interaction, if called as a POST request the request params are used to
     send the email, if not then the form template is rendered.
 
-    :return: a page, either the form page or the success page if the email was sent successfully
+    :returns: a page, either the form page or the success page if the email was sent
+        successfully
     """
     # dict of context values for the template renderer
     extra_vars = {
@@ -80,6 +81,6 @@ def ajax_submit():
     """
     AJAX form submission.
 
-    :return: json dumped data for the response
+    :returns: json dumped data for the response
     """
     return jsonify(_helpers.submit())

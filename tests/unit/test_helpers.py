@@ -1,8 +1,9 @@
-import pytest
 from datetime import datetime, timezone
 
-from ckanext.contact.routes._helpers import build_subject
+import pytest
 from freezegun import freeze_time
+
+from ckanext.contact.routes._helpers import build_subject
 
 
 class TestBuildSubject:
@@ -32,7 +33,7 @@ class TestBuildSubject:
         subject = build_subject(timestamp_default=timestamp_default)
         assert subject == 'Contact/Question from visitor'
 
-    @freeze_time("2021-01-01")
+    @freeze_time('2021-01-01')
     def test_no_config_pass_default_timestamp_true(self):
         timestamp_default = True
 
@@ -43,7 +44,7 @@ class TestBuildSubject:
         )
         assert subject == f'Contact/Question from visitor [{timestamp}]'
 
-    @freeze_time("2021-01-01")
+    @freeze_time('2021-01-01')
     def test_no_config_pass_both(self):
         subject_default = 'TEST SUBJECT'
         timestamp_default = True
@@ -57,7 +58,7 @@ class TestBuildSubject:
         )
         assert subject == f'{subject_default} [{timestamp}]'
 
-    @freeze_time("2021-01-01")
+    @freeze_time('2021-01-01')
     @pytest.mark.ckan_config('ckanext.contact.subject', 'TEST SUBJECT')
     @pytest.mark.ckan_config('ckanext.contact.add_timestamp_to_subject', 'true')
     def test_config_with_timestamp(self):

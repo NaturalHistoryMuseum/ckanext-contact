@@ -19,8 +19,8 @@ classifiers = [
     "Programming Language :: Python :: 3.8"
 ]
 dependencies = [
-    "ckantools>=0.3.0",
-    "pyisemail==2.0.1"
+    "pyisemail==2.0.1",
+    "ckantools>=0.4.0"
 ]
 
 [project.optional-dependencies]
@@ -65,9 +65,8 @@ version_files = [
     "CITATION.cff:^version"
 ]
 
-[tool.black]
-line-length = 88
-skip_string_normalization = true
+[tool.ruff.format]
+quote-style = "single"
 
 [tool.pylint]
 max-line-length = 88
