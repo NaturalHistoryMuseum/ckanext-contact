@@ -20,7 +20,7 @@ classifiers = [
 ]
 dependencies = [
     "pyisemail==2.0.1",
-    "ckantools>=0.4.0"
+    "ckantools>=0.4.2"
 ]
 
 [project.optional-dependencies]
