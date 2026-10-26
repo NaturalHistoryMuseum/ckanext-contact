@@ -23,13 +23,13 @@ def _context():
 @blueprint.before_request
 def before_request():
     """
-    This function runs before the request handler to setup a few things. We use it to
-    set the context dict and the user has check access.
+    This function runs before the request handler to setup a few things.
+
+    We use it to set the context dict and the user has check access.
 
     :param action: the action the user is attempting to perform (i.e. the handler)
     :param env: the environment object
     """
-
     try:
         toolkit.check_access('send_contact', _context())
     except toolkit.NotAuthorized:
