@@ -8,8 +8,9 @@ class RecaptchaError(ValueError):
 
 def check_recaptcha(token, expected_action):
     """
-    Check a user's recaptcha token is valid, and raise RecaptchaError if it's not. If
-    the token is valid then this function has no side effects.
+    Check a user's recaptcha token is valid, and raise RecaptchaError if it's not.
+
+    If the token is valid then this function has no side effects.
 
     :param token: the token as returned in the frontend by a call to execute
     :param expected_action: the expected action associated with the token
