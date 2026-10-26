@@ -100,8 +100,9 @@ def build_subject(
 
 def submit():
     """
-    Take the data in the request params and send an email using them. If the data is
-    invalid or a recaptcha is setup and it fails, don't send the email.
+    Take the data in the request params and send an email using them.
+
+    If the data is invalid or a recaptcha is setup and it fails, don't send the email.
 
     :returns: a dict of details
     """
